@@ -60,4 +60,27 @@ class Board
 			field[pos[0]][pos[1]] = piece.sym
 		end
 	end
+
+	def valid_moves(piece)
+		if piece.is_a? Pawn
+			moves = pawn_moves
+		elsif piece.is_a? Rook
+			moves = rook_moves
+		elsif piece.is_a? Knight
+			moves = knight_moves
+		elsif piece.is_a? Bishop
+			moves = bishop_moves
+		elsif piece.is_a? Queen
+			moves = queen_moves
+		elsif piece.is_a? King
+			moves = king_moves
+		end
+		moves
+	end
+
+
+
+
+
+
 end

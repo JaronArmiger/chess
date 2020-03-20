@@ -10,7 +10,4 @@ class Pawn
 			@sym = "\u{265F}"
 		end
 	end
-
-	def valid_moves(curr_pos)
-	end
 end
