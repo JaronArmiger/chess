@@ -113,5 +113,9 @@ class Board
 		puts ""
 	end
 
-	
+	def translate_pos(pos)
+		letter = pos[0]
+		num = pos[1].to_i
+		pos_arr = [letter.ord - 97, num - 1]
+	end
 end
