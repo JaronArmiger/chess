@@ -1,6 +1,6 @@
 class Game
-	def initialize
-		setup_board
+	def start
+		populate
 	end
 
 	

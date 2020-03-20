@@ -9,10 +9,45 @@ require_relative 'bishop.rb'
 require_relative 'king.rb'
 require_relative 'queen.rb'
 
-pawn = Pawn.new("A4", 'black')
-board = Board.new
+pawn_b = Pawn.new("A4", 'black')
+pawn_w = Pawn.new("A4", 'white')
+
+rook_b = Rook.new("A4", 'black')
+rook_w = Rook.new("A4", 'white')
+
+knight_b = Knight.new("A4", 'black')
+knight_w = Knight.new("A4", 'white')
+
+bishop_b = Bishop.new("A4", 'black')
+bishop_w = Bishop.new("A4", 'white')
+
+queen_b = Queen.new("A4", 'black')
+queen_w = Queen.new("A4", 'white')
+
+king_b = King.new("A4", 'black')
+king_w = King.new("A4", 'white')
 
 
+puts "black pawn: #{pawn_b.sym}"
+puts "white pawn: #{pawn_w.sym}"
+
+puts "black rook: #{rook_b.sym}"
+puts "white rook: #{rook_w.sym}"
+
+puts "black knight: #{knight_b.sym}"
+puts "white knight: #{knight_w.sym}"
+
+puts "black bishop: #{bishop_b.sym}"
+puts "white bishop: #{bishop_w.sym}"
+
+puts "black queen: #{queen_b.sym}"
+puts "white queen: #{queen_w.sym}"
+
+puts "black king: #{king_b.sym}"
+puts "white king: #{king_w.sym}"
+
+=begin
 puts pawn.position
 board.board[3][4] = "H"
 board.show
+=end
