@@ -10,7 +10,7 @@ class Player
 		if color == 'black'
 			pawn_row = 2
 			army_row = 1
-		elsif color = 'white'
+		elsif color == 'white'
 			pawn_row = 7
 			army_row = 8
 		end
@@ -25,17 +25,23 @@ class Player
 
 
 		pieces["@#{pre}_rook_1"] = Rook.new("a#{army_row}",color)
-		pieces[("@#{pre}_rook_2"] = Rook.new("h#{army_row}",color,player)
+		pieces["@#{pre}_rook_2"] = Rook.new("h#{army_row}",color)
 
 		pieces["@#{pre}_knight_1"] = Knight.new("b#{army_row}",color)
 		pieces["@#{pre}_knight_2"] = Knight.new("g#{army_row}",color)
 
 		pieces["@#{pre}_bishop_1"] = Bishop.new("c#{army_row}",color)
-		pieces["@#{pre}_bishop_2"] = Bishop.new("f#{army_row}",color
+		pieces["@#{pre}_bishop_2"] = Bishop.new("f#{army_row}",color)
 
 		pieces["@#{pre}_queen"] = Queen.new("d#{army_row}",color)
 
 		pieces["@#{pre}_king"] = King.new("h#{army_row}",color)
 		pieces
+	end
+
+	def list_pieces
+		@pieces.each do |name, piece|
+			print "#{name} => pos: #{piece.pos}\n"
+		end
 	end
 end

@@ -11,8 +11,7 @@ require_relative 'queen.rb'
 
 
 player1 = Player.new("harold", "black")
-board = Board.new
-board.make_pieces(player1)
+player1.list_pieces
 
 =begin
 

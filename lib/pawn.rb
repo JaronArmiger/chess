@@ -1,9 +1,9 @@
 class Pawn
-	attr_accessor :pos, :color, :sym, :owner
-	def initialize(pos, color, owner)
+	attr_accessor :pos, :color, :sym
+	def initialize(pos, color)
 		@pos = pos
 		@color = color
-		@owner = owner
+
 		if color == 'white'
 			@sym = "\u{2659}"
 		elsif color == 'black'
