@@ -10,9 +10,16 @@ require_relative 'king.rb'
 require_relative 'queen.rb'
 
 
-player1 = Player.new("harold", "black")
-player1.list_pieces
+player1 = Player.new("the weeknd", "black")
+#player1.list_pieces
+player2 = Player.new("demany", "white")
+#player2.list_pieces
 
+board = Board.new
+
+board.populate(player1.pieces)
+board.populate(player2.pieces)
+board.show
 =begin
 
 pawn_b = Pawn.new("A4", 'black')

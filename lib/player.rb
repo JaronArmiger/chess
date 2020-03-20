@@ -33,9 +33,9 @@ class Player
 		pieces["@#{pre}_bishop_1"] = Bishop.new("c#{army_row}",color)
 		pieces["@#{pre}_bishop_2"] = Bishop.new("f#{army_row}",color)
 
-		pieces["@#{pre}_queen"] = Queen.new("d#{army_row}",color)
+		pieces["@#{pre}_queen"] = Queen.new("e#{army_row}",color)
 
-		pieces["@#{pre}_king"] = King.new("h#{army_row}",color)
+		pieces["@#{pre}_king"] = King.new("d#{army_row}",color)
 		pieces
 	end
 
