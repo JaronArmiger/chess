@@ -1,6 +1,6 @@
 class Rook
 	attr_accessor :pos, :color, :sym, :owner
-	def initialize(pos, color. owner)
+	def initialize(pos, color, owner)
 		@pos = pos
 		@color = color
 		@owner = owner

@@ -9,8 +9,10 @@ require_relative 'bishop.rb'
 require_relative 'king.rb'
 require_relative 'queen.rb'
 
-game = Game.new
-game.play
+
+player1 = Player.new("harold", "black")
+board = Board.new
+board.make_pieces(player1)
 
 =begin
 
