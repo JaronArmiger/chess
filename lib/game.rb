@@ -24,9 +24,7 @@ class Game
 
 	end
 
-	def make_pieces(player)
-		@b_pawn1 = Pawn.new('a2','black',player)
-	end
+	
 
 	def play
 		start
