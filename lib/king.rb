@@ -4,9 +4,9 @@ class King
 		@pos = pos
 		@color = color
 
-		if color == 'white'
+		if color == 'black'
 			@sym = "\u{265A}"
-		elsif color == 'black'
+		elsif color == 'white'
 			@sym = "\u{2654}"
 		end
 	end

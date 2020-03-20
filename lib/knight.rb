@@ -4,9 +4,9 @@ class Knight
 		@pos = pos
 		@color = color
 
-		if color == 'white'
+		if color == 'black'
 			@sym = "\u{265E}"
-		elsif color == 'black'
+		elsif color == 'white'
 			@sym = "\u{2658}"
 		end
 	end

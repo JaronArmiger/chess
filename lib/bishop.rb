@@ -4,9 +4,9 @@ class Bishop
 		@pos = pos
 		@color = color
 
-		if color == 'white'
+		if color == 'black'
 			@sym = "\u{265D}"
-		elsif color == 'black'
+		elsif color == 'white'
 			@sym = "\u{2657}"
 		end
 	end

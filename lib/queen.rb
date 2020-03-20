@@ -4,9 +4,9 @@ class Queen
 		@pos = pos
 		@color = color
 
-		if color == 'white'
+		if color == 'black'
 			@sym = "\u{265B}"
-		elsif color == 'black'
+		elsif color == 'white'
 			@sym = "\u{2655}"
 		end
 	end

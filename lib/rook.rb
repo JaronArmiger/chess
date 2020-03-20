@@ -4,9 +4,9 @@ class Rook
 		@pos = pos
 		@color = color
 
-		if color == 'white'
+		if color == 'black'
 			@sym = "\u{265C}"
-		elsif color == 'black'
+		elsif color == 'white'
 			@sym = "\u{2656}"
 		end
 	end
