@@ -9,6 +9,11 @@ require_relative 'bishop.rb'
 require_relative 'king.rb'
 require_relative 'queen.rb'
 
+game = Game.new
+game.play
+
+=begin
+
 pawn_b = Pawn.new("A4", 'black')
 pawn_w = Pawn.new("A4", 'white')
 
@@ -45,9 +50,4 @@ puts "white queen: #{queen_w.sym}"
 
 puts "black king: #{king_b.sym}"
 puts "white king: #{king_w.sym}"
-
-=begin
-puts pawn.position
-board.board[3][4] = "H"
-board.show
 =end

@@ -41,8 +41,9 @@ class Board
 				end
 			end
 			print "|"
-			puts "\n"
+			puts ""
 			puts line
 		end
+		puts ""
 	end
 end
