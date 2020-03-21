@@ -12,9 +12,16 @@ require './lib/queen.rb'
 describe Board do
 	before { 	@board = Board.new 
 				}
-	describe "#translate_pos" do
+
+	describe "#board_to_arr" do
 		it "converts traditional chess position notation to array-readable notation" do
-			expect(@board.translate_pos("a1")).to eql([0,0])
+			expect(@board.board_to_arr("d5")).to eql([3,4])
+		end
+	end
+
+	describe "#arr_to_board" do
+		it "converts array notation to traditional chess notation" do
+			expect(@board.arr_to_board([3,4])).to eql("d5")
 		end
 	end
 
