@@ -91,20 +91,76 @@ class Board
 		moves
 	end
 
-	def rook_moves(x,y)
-	end
-
 	def knight_moves(x,y)
 	end
 
-	def bishop_moves(x,y)
+	def check_moves(piece)
+		puts "check moves baby"
+		arr_pos = translate_pos(piece.pos)
+		moves = []
+		#p piece
+		until piece.direction.empty?
+			print "direction:"; p piece.direction
+			x = arr_pos[0]
+			y = arr_pos[1]
+			curr_dir = piece.direction.shift
+			n = 1
+			until n == piece.limit + 1
+				case curr_dir
+				when 'up'
+					y += 1
+				when 'down'
+					y -= 1
+				when 'left'
+					x -= 1
+				when 'right'
+					x += 1
+				when 'up-left'
+					x -= 1
+					y += 1
+				when 'up-right'
+					x += 1
+					y += 1
+				when 'down-left'
+					x -= 1
+					y -= 1
+				when 'down-right'
+					x += 1
+					y -= 1
+				end
+				if (x >= 0 && x < 8) && (y >= 0 && y < 8)   # next square on board?
+					next_square = field[x][y]
+				else
+					break
+				end
+
+				if next_square.nil?
+					moves << [x,y]
+				elsif next_square.color == piece.color   # same team
+					break
+				else		# other team
+					moves << [x,y]
+					break
+				end
+				n += 1
+			end
+		end
+		moves
 	end
 
-	def queen_moves(x,y)
-	end
 
-	def king_moves(x,y)
-	end
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 end

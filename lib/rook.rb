@@ -10,6 +10,6 @@ class Rook
 		end
 
 		@direction = ['up','down','left','right']
-		@limit = nil
+		@limit = 9
 	end
 end

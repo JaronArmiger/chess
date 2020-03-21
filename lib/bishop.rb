@@ -10,6 +10,6 @@ class Bishop
 		end
 
 		@direction = ['up-left','up-right','down-left','down-right']
-		@limit = nil
+		@limit = 9
 	end
 end

@@ -1,5 +1,5 @@
 class Queen
-	attr_accessor :pos, :color, :sym. :direction, :limit
+	attr_accessor :pos, :color, :sym, :direction, :limit
 	def initialize(pos, color)
 		@pos = pos
 		@color = color
@@ -10,6 +10,6 @@ class Queen
 		end
 
 		@direction = ['up','down','left','right','up-left','up-right','down-left','down-right']
-		@limit = nil
+		@limit = 9
 	end
 end

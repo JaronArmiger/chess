@@ -20,12 +20,26 @@ player2 = Player.new("demany", "white")
 #player2.list_pieces
 
 board = Board.new
-
+rook = Rook.new('a1','black')
+board.field[0][0] = rook
+board.show
+p board.check_moves(rook)
+=begin
 board.populate(player1.pieces)
 board.populate(player2.pieces)
-board.show
-p board.field
-p board.field[0][1].color
+
+player1.pieces.each do |name, piece|
+	puts name
+	puts "\t#{piece.pos}"
+	puts "\t#{piece.color}"
+	puts "\t#{piece.sym}"
+	puts "\t#{piece.direction}"
+	puts "\t#{piece.limit}"
+end
+=end
+#board.show
+#p board.field
+#p board.field[0][1].color
 =begin
 
 pawn_b = Pawn.new("A4", 'black')
