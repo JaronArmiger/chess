@@ -61,8 +61,6 @@ class Board
 		end
 	end
 
-	
-
 	def occupied(arr_pos)
 		square = field[arr_pos[0]][arr_pos[1]]
 		if square.nil?
@@ -78,16 +76,10 @@ class Board
 		y = arr_pos[1]
 		if piece.is_a? Pawn
 			moves = pawn_moves(x,y)
-		elsif piece.is_a? Rook
-			moves = rook_moves(x,y)
 		elsif piece.is_a? Knight
 			moves = knight_moves(x,y)
-		elsif piece.is_a? Bishop
-			moves = bishop_moves(x,y)
-		elsif piece.is_a? Queen
-			moves = queen_moves(x,y)
-		elsif piece.is_a? King
-			moves = king_moves(x,y)
+		else
+			moves = check_moves()
 		end
 		moves
 	end
