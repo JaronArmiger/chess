@@ -18,13 +18,17 @@ describe Board do
 		end
 	end
 
-	describe "#occupied?" do
-		it "returns true if there is a piece at given position" do
-			@board.field[3][3] = "\u{2655}"
-			expect(@board.occupied?([3,3])).to be true
+	describe "#occupied" do
+		it "returns 'black' if there is a black piece at given position" do
+			@board.field[3][3] = "\u{265F}"
+			expect(@board.occupied([3,3])).to eql('black')
+		end
+		it "returns 'black' if there is a black piece at given position" do
+			@board.field[3][3] = "\u{2659}"
+			expect(@board.occupied([3,3])).to eql('white')
 		end
 		it "returns false if the given position is vacant" do
-			expect(@board.occupied?([3,3])).to be false
+			expect(@board.occupied([3,3])).to be false
 		end
 	end
 

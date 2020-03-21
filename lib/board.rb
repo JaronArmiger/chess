@@ -61,7 +61,7 @@ class Board
 		end
 	end
 
-	def occupied?(arr_pos)
+	def occupied(arr_pos)
 		square = field[arr_pos[0]][arr_pos[1]]
 		return false if square.nil?
 		case square
