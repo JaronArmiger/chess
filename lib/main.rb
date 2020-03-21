@@ -20,10 +20,23 @@ player2 = Player.new("demany", "white")
 #player2.list_pieces
 
 board = Board.new
-rook = Rook.new('a1','black')
-board.field[0][0] = rook
+
+queen = Queen.new('d5','black')
+board.field[3][4] = queen
+
 board.show
-p board.check_moves(rook)
+moves_arr = board.check_moves(queen)
+
+translated_arr = []
+moves_arr.each do |pair|
+	x = pair[0]
+	y = pair[1]
+	letter = (x + 97).chr
+	num = y -1
+	translated_arr << "#{letter}#{num}"
+end
+
+p translated_arr
 =begin
 board.populate(player1.pieces)
 board.populate(player2.pieces)

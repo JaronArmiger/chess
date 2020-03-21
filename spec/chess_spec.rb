@@ -37,11 +37,19 @@ describe Board do
 				@board.field[0][0] = @rook
 				}
 		it "returns array containing all possible moves for rook as only piece on board" do
-			
 			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]])
 		end
 
-		it "returns above shortened array when friendly piece is on its move path" do
+		it "returns  shortened array when friendly piece is on its move path" do
+			new_rook = Rook.new('d1', 'black')
+			@board.field[4][0] = new_rook
+			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0]])
+		end
+
+		it "returns same array as above, with the addition of square containing opposing piece when opposing piece lies on move path" do
+			new_rook = Rook.new('d1', 'white')
+			@board.field[4][0] = new_rook
+			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0], [4,0]])
 		end
 	end
 end

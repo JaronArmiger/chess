@@ -48,7 +48,7 @@ class Board
 		puts ""
 	end
 
-	def translate_pos(board_pos)
+	def board_to_arr(board_pos)
 		letter = board_pos[0]
 		num = board_pos[1].to_i
 		arr_pos = [letter.ord - 97, num - 1]
@@ -56,7 +56,7 @@ class Board
 
 	def populate(pieces_hash)
 		pieces_hash.each do |name, piece|
-			arr_pos = translate_pos(piece.pos)
+			arr_pos = board_to_arr(piece.pos)
 			field[arr_pos[0]][arr_pos[1]] = piece
 		end
 	end
@@ -71,7 +71,7 @@ class Board
 	end
 
 	def valid_moves(piece,board_pos)
-		arr_pos = translate_pos(board_pos)
+		arr_pos = board_to_arr(board_pos)
 		x = arr_pos[0]
 		y = arr_pos[1]
 		if piece.is_a? Pawn
@@ -95,12 +95,11 @@ class Board
 	end
 
 	def check_moves(piece)
-		puts "check moves baby"
-		arr_pos = translate_pos(piece.pos)
+		arr_pos = board_to_arr(piece.pos)
 		moves = []
 		#p piece
 		until piece.direction.empty?
-			print "direction:"; p piece.direction
+			#print "direction:"; p piece.direction
 			x = arr_pos[0]
 			y = arr_pos[1]
 			curr_dir = piece.direction.shift
