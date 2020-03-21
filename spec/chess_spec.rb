@@ -40,23 +40,37 @@ describe Board do
 	end
 
 	describe "#check_moves" do
-		before {@rook = Rook.new('a1','black')
+		before { @rook = Rook.new('a1','black')
 				@board.field[0][0] = @rook
 				}
 		it "returns array containing all possible moves for rook as only piece on board" do
 			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]])
 		end
 
-		it "returns  shortened array when friendly piece is on its move path" do
+		it "returns  shortened array when friendly piece is on rook's move path" do
 			new_rook = Rook.new('d1', 'black')
 			@board.field[4][0] = new_rook
 			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0]])
 		end
 
-		it "returns same array as above, with the addition of square containing opposing piece when opposing piece lies on move path" do
+		it "returns same array as above, with the addition of square containing opposing piece when opposing piece lies on rook's move path" do
 			new_rook = Rook.new('d1', 'white')
 			@board.field[4][0] = new_rook
 			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0], [4,0]])
+		end
+	end
+
+	describe "#pawn_moves" do
+		before { @pawn = Pawn.new('b2', 'black')
+				 @board.field[1][1] = @pawn }
+		it "returns array containing the two squares above it when its path is clear and no pieces lie on its diagonals" do
+			expect(@board.pawn_moves(@pawn)).to eql([[1,2],[1,3]])
+		end
+
+		it "returns same array, with addition of up-left adjacent diagonal, when that square is occupied by opposing piece" do
+			queen = Queen.new('c1','white')
+			@board.field[0][2] = queen
+			expect(@board.pawn_moves(@pawn)).to eql([[1,2],[1,3],[0,2]])
 		end
 	end
 end

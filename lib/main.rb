@@ -21,22 +21,14 @@ player2 = Player.new("demany", "white")
 
 board = Board.new
 
-queen = Queen.new('d5','black')
-board.field[3][4] = queen
-
+pawn = Pawn.new('d5','black')
+board.field[3][4] = pawn
+new_pawn = Pawn.new('d6','black')
+board.field[3][5] = new_pawn
 board.show
-moves_arr = board.check_moves(queen)
+moves = board.check_moves(pawn)
+p board.pretty_moves(moves)
 
-translated_arr = []
-moves_arr.each do |pair|
-	x = pair[0]
-	y = pair[1]
-	letter = (x + 97).chr
-	num = y -1
-	translated_arr << "#{letter}#{num}"
-end
-
-p translated_arr
 =begin
 board.populate(player1.pieces)
 board.populate(player2.pieces)

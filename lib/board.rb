@@ -78,24 +78,34 @@ class Board
 		end
 	end
 
-	def valid_moves(piece,board_pos)
-		arr_pos = board_to_arr(board_pos)
-		x = arr_pos[0]
-		y = arr_pos[1]
+	def valid_moves(piece)
 		if piece.is_a? Pawn
-			moves = pawn_moves(x,y)
+			moves = pawn_moves(piece)
 		elsif piece.is_a? Knight
-			moves = knight_moves(x,y)
+			moves = knight_moves(piece)
 		else
-			moves = check_moves()
+			moves = check_moves(piece)
 		end
 		moves
 	end
 
-	def pawn_moves(x,y)
-		moves = []
-		moves << [x,y+1] unless occupied?([x,y+1])
-		moves << [x,y+2] unless occupied?([x,y+2])
+	def pawn_moves(piece)
+		moves = check_moves(piece)
+		arr_pos = board_to_arr(piece.pos)
+		x = arr_pos[0]
+		y = arr_pos[1]
+		up_left = field[x-1][y+1]
+		up_right = field[x+1][y+1]
+		if !up_left.nil?
+			if !(up_left.color == piece.color)
+				moves << [x-1,y+1]
+			end
+		end
+		if !up_right.nil?
+			if !(up_right.color == piece.color)
+				moves << [x+1,y+1]
+			end
+		end
 		moves
 	end
 
@@ -153,6 +163,14 @@ class Board
 			end
 		end
 		moves
+	end
+
+	def pretty_moves(moves_arr)
+		pretty_arr = []
+		moves_arr.each do |pair|
+			pretty_arr << arr_to_board(pair)
+		end
+		pretty_arr
 	end
 
 
