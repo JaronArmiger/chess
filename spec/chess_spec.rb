@@ -32,9 +32,16 @@ describe Board do
 		end
 	end
 
-	describe "#pawn_moves" do
-		it "returns array containing [x,y+1] and [x,y+1] if neither of those squares is occupied" do
-			expect(@board.pawn_moves(1,1)).to eql([[1,2],[1,3]])
-		end 
+	describe "#check_moves" do
+		before {@rook = Rook.new('a1','black')
+				@board.field[0][0] = @rook
+				}
+		it "returns array containing all possible moves for rook as only piece on board" do
+			
+			expect(@board.check_moves(@rook)).to eql([[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]])
+		end
+
+		it "returns above shortened array when friendly piece is on its move path" do
+		end
 	end
 end
