@@ -71,40 +71,45 @@ class Board
 	end
 
 	def valid_moves(piece,board_pos)
+		arr_pos = translate_pos(board_pos)
+		x = arr_pos[0]
+		y = arr_pos[1]
 		if piece.is_a? Pawn
-			moves = pawn_moves(board_pos)
+			moves = pawn_moves(x,y)
 		elsif piece.is_a? Rook
-			moves = rook_moves(board_pos)
+			moves = rook_moves(x,y)
 		elsif piece.is_a? Knight
-			moves = knight_moves(board_pos)
+			moves = knight_moves(x,y)
 		elsif piece.is_a? Bishop
-			moves = bishop_moves(board_pos)
+			moves = bishop_moves(x,y)
 		elsif piece.is_a? Queen
-			moves = queen_moves(board_pos)
+			moves = queen_moves(x,y)
 		elsif piece.is_a? King
-			moves = king_moves(board_pos)
+			moves = king_moves(x,y)
 		end
 		moves
 	end
 
-	def pawn_moves(board_pos)
+	def pawn_moves(x,y)
 		moves = []
-
+		moves << [x,y+1] unless occupied?([x,y+1])
+		moves << [x,y+2] unless occupied?([x,y+2])
+		moves
 	end
 
-	def rook_moves(board_pos)
+	def rook_moves(x,y)
 	end
 
-	def knight_moves(board_pos)
+	def knight_moves(x,y)
 	end
 
-	def bishop_moves(board_pos)
+	def bishop_moves(x,y)
 	end
 
-	def queen_moves(board_pos)
+	def queen_moves(x,y)
 	end
 
-	def king_moves(board_pos)
+	def king_moves(x,y)
 	end
 
 
