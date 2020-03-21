@@ -21,7 +21,7 @@ describe Board do
 
 	describe "#arr_to_board" do
 		it "converts array notation to traditional chess notation" do
-			expect(@board.arr_to_board([3,4])).to eql("d5")
+			expect(@board.arr_to_board([1,2])).to eql("b3")
 		end
 	end
 

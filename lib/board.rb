@@ -54,6 +54,14 @@ class Board
 		arr_pos = [letter.ord - 97, num - 1]
 	end
 
+	def arr_to_board(arr_pos)
+		x = arr_pos[0]
+		y = arr_pos[1]
+		letter = (x + 97).chr
+		num = y + 1
+		board_pos = "#{letter}#{num}"
+	end
+
 	def populate(pieces_hash)
 		pieces_hash.each do |name, piece|
 			arr_pos = board_to_arr(piece.pos)
