@@ -109,7 +109,25 @@ class Board
 		moves
 	end
 
-	def knight_moves(x,y)
+	def knight_moves(piece)
+		moves = []
+		arr_pos = board_to_arr(piece.pos)
+		x = arr_pos[0]
+		y = arr_pos[1]
+		possible = [[x+1,y+2],[x+2,y+1],[x+2,y-1],[x+1,y-2],[x-1,y-2],[x-2,y-1],[x-2,y+1],[x-1,y+2]]
+		possible.each do |pair|
+			x = pair[0]
+			y = pair[1]
+			if (x >= 0 && x < 8) && (y >= 0 && y < 8)
+				square = field[x][y]
+				if square.nil?  # if vacant
+					moves << pair
+				elsif square.color != piece.color #if enemy
+					moves << pair
+				end
+			end
+		end
+		moves
 	end
 
 	def check_moves(piece)

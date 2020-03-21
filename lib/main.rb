@@ -20,13 +20,22 @@ player2 = Player.new("demany", "white")
 #player2.list_pieces
 
 board = Board.new
-
+=begin
 pawn = Pawn.new('d5','black')
 board.field[3][4] = pawn
+new_pawn = Pawn.new('c6','white')
+board.field[2][5] = new_pawn
+
+queen = Queen.new('d5','black')
+board.field[3][4] = queen
 new_pawn = Pawn.new('d6','black')
 board.field[3][5] = new_pawn
+=end
+knight = Knight.new('c4','black')
+board.field[2][3] = knight
 board.show
-moves = board.check_moves(pawn)
+moves = board.knight_moves(knight)
+p moves
 p board.pretty_moves(moves)
 
 =begin

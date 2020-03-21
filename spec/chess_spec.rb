@@ -73,4 +73,12 @@ describe Board do
 			expect(@board.pawn_moves(@pawn)).to eql([[1,2],[1,3],[0,2]])
 		end
 	end
+
+	describe "#knight_moves" do
+		before { @knight = Knight.new('c4','black')
+				 @board.field[2][3] = @knight }
+		it "returns array of 8 possible moves for knight in middle of board" do
+			expect(@board.knight_moves(@knight)).to eql([[3, 5], [4, 4], [4, 2], [3, 1], [1, 1], [0, 2], [0, 4], [1, 5]])
+		end
+	end
 end
