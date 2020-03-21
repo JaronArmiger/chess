@@ -9,10 +9,11 @@ require_relative 'bishop.rb'
 require_relative 'king.rb'
 require_relative 'queen.rb'
 
-
+=begin
 game = Game.new
 game.play
-=begin
+=end
+
 player1 = Player.new("the weeknd", "black")
 #player1.list_pieces
 player2 = Player.new("demany", "white")
@@ -23,7 +24,8 @@ board = Board.new
 board.populate(player1.pieces)
 board.populate(player2.pieces)
 board.show
-=end
+p board.field
+p board.field[0][1].color
 =begin
 
 pawn_b = Pawn.new("A4", 'black')

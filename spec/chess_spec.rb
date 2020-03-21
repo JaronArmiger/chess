@@ -20,11 +20,11 @@ describe Board do
 
 	describe "#occupied" do
 		it "returns 'black' if there is a black piece at given position" do
-			@board.field[3][3] = "\u{265F}"
+			@board.field[3][3] = Pawn.new('d4','black')
 			expect(@board.occupied([3,3])).to eql('black')
 		end
 		it "returns 'black' if there is a black piece at given position" do
-			@board.field[3][3] = "\u{2659}"
+			@board.field[3][3] = Pawn.new('d4','white')
 			expect(@board.occupied([3,3])).to eql('white')
 		end
 		it "returns false if the given position is vacant" do
