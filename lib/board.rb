@@ -38,7 +38,7 @@ class Board
 				if field[row][col].nil?
 					print "|   "
 				else
-					print "| #{field[row][col]} "
+					print "| #{field[row][col].sym} "
 				end
 			end
 			print "|"
@@ -57,7 +57,7 @@ class Board
 	def populate(pieces_hash)
 		pieces_hash.each do |name, piece|
 			arr_pos = translate_pos(piece.pos)
-			field[arr_pos[0]][arr_pos[1]] = piece.sym
+			field[arr_pos[0]][arr_pos[1]] = piece
 		end
 	end
 
