@@ -63,10 +63,12 @@ class Board
 
 	def occupied?(arr_pos)
 		square = field[arr_pos[0]][arr_pos[1]]
-		if square.nil?
-			return false
-		else
-			return true
+		return false if square.nil?
+		case square
+		when "\u{265F}" || "\u{265C}" || "\u{265E}" || "\u{265D}" || "\u{265B}" || "\u{265A}"
+			return "black"
+		when "\u{2659}" || "\u{2656}" || "\u{2658}" || "\u{2657}" || "\u{2655}" || "\u{2654}"
+			return "white"
 		end
 	end
 

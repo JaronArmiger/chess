@@ -30,7 +30,7 @@ describe Board do
 
 	describe "#pawn_moves" do
 		it "returns array containing [x,y+1] and [x,y+1] if neither of those squares is occupied" do
-
+			expect(@board.pawn_moves(1,1)).to eql([[1,2],[1,3]])
 		end 
 	end
 end
