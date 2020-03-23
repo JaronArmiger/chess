@@ -96,10 +96,10 @@ class Game
 		while 1
 			puts "where would you like to move?"
 			destination = gets.chomp.downcase
-			if valid_pos_name?(destination)
+			if valid_pos_name?(destination) && pos_on_board?
 				break
 			else
-				puts "that's not a valid position"
+				puts "that's not a valid position :("
 			end
 		end
 
@@ -112,14 +112,10 @@ class Game
 	end
 
 	def valid_pos_name?(pos)
-		return true if pos.length == 2 && (pos[0] =~ /[a-z]/) && (pos[1] =~ /\d/)
-		false
-	end
-	
-	def pos_on_board?(pos)
 		return true if pos.length == 2 && (pos[0] >= "a" && pos[0] <= "g") && (pos[1].to_i >= 1 && pos[1].to_i <= 8)
 		false
 	end
+
 
 	def play
 		test_start

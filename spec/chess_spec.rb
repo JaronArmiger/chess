@@ -20,6 +20,8 @@ describe Game do
 			expect(@game.pos_on_board?("u1")).to be false
 		end
 	end
+
+	
 end
 
 
