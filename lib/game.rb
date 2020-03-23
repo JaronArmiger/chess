@@ -62,6 +62,7 @@ class Game
 			puts "there are #{choice}s at "
 			chosen_hash.keys.each {|k| print "#{k} "}
 			puts ""
+			sleep(0.7)
 			puts "which #{choice} do you want to move?"
 			pos = gets.chomp.downcase
 			if valid_pos_name?(pos)
@@ -79,6 +80,19 @@ class Game
 		pos
 	end
 
+	def get_destination(board_moves,choice)
+		while 1
+			puts "where would you like to move your #{choice}? (input location)"
+			destination = gets.chomp.downcase
+			if board_moves.any? { |move| move == destination }
+				break
+			else
+				puts "your #{choice} piece can't move there :("
+			end
+		end
+		destination
+	end
+
 
 	def turn(player)
 		@board.show
@@ -87,7 +101,7 @@ class Game
 		chosen_arr = get_chosen_arr(player)
 		chosen_hash = chosen_arr[0]
 		choice = chosen_arr[1]
-		print "chosen_hash"; p chosen_hash
+		#print "chosen_hash"; p chosen_hash
 		if chosen_hash.length > 1
 			pos = choose_piece(chosen_hash,choice)
 		else
@@ -95,21 +109,14 @@ class Game
 		end
 		piece_name = chosen_hash[pos]
 		piece = player.pieces[piece_name]
-		moves = @board.valid_moves(piece)
-		moves = @board.pretty_moves(moves)
+		arr_moves = @board.valid_moves(piece) # array containing piece's possible moves in array format [0,0]
+		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
 		puts "piece_name: #{piece_name}"
 		print "piece: "; p piece
-		print "moves: "; p moves
-		while 1
-			puts "where would you like to move?"
-			destination = gets.chomp.downcase
-			if valid_pos_name?(destination)
-				
-			else
-				puts "that's not a valid position :("
-			end
-		end
+		print "moves: "; p board_moves
+		destination = get_destination(board_moves,choice)
 
+		puts "you're moving to #{destination}!!"
 	end
 	#   0x00007f8acf0bf520
 	#   0x00007f8acf0bf520
