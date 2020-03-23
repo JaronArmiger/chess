@@ -7,14 +7,14 @@ class Game
 		name1 = gets.chomp
 		puts "you're black"
 		@player1 = Player.new(name1, 'black')
-		@board.populate(@player1.pieces)
+		@board.update(@player1.pieces)
 		sleep(0.5)
 
 		puts "player 2 what's your name?"
 		name2 = gets.chomp
 		puts "you're white"
 		@player2 = Player.new(name2, 'white')
-		@board.populate(@player2.pieces)
+		@board.update(@player2.pieces)
 		sleep(0.5)
 		
 		puts "here's the board!"
@@ -25,9 +25,9 @@ class Game
 	def test_start
 		@board = Board.new
 		@player1 = Player.new("the weeknd", 'black')
-		@board.populate(@player1.pieces)
+		@board.update(@player1.pieces)
 		@player2 = Player.new("demany", 'white')
-		@board.populate(@player2.pieces)
+		@board.update(@player2.pieces)
 		@board.show
 	end
 
@@ -40,7 +40,7 @@ class Game
 				player.pieces.each do |piece_name,piece_object|
 					if piece_name =~ /#{choice}/
 						#print "piece_name, piece"; p piece_name; p piece;
-						chosen_hash[piece_name] = piece_object.pos
+						chosen_hash[piece_object.pos] = piece_name
 					end
 				end
 				if chosen_hash.length > 0
@@ -57,15 +57,15 @@ class Game
 		return chosen_hash, choice
 	end
 
-	def choose_pos(chosen_hash,choice)
+	def choose_piece(chosen_hash,choice)
 		while 1
 			puts "there are #{choice}s at "
-			chosen_hash.values.each {|v| print "#{v} "}
+			chosen_hash.keys.each {|k| print "#{k} "}
 			puts ""
 			puts "which #{choice} do you want to move?"
 			pos = gets.chomp.downcase
 			if valid_pos_name?(pos)
-				if chosen_hash.values.any? { |v| v == pos }
+				if chosen_hash.keys.any? { |k| k == pos }
 					break
 				else
 					puts "you don't have a #{choice} on that square :("
@@ -87,24 +87,32 @@ class Game
 		chosen_arr = get_chosen_arr(player)
 		chosen_hash = chosen_arr[0]
 		choice = chosen_arr[1]
-		
+		print "chosen_hash"; p chosen_hash
 		if chosen_hash.length > 1
-			pos = choose_pos(chosen_hash,choice)
+			pos = choose_piece(chosen_hash,choice)
 		else
 			pos = chosen_hash.values[0]
 		end
+		piece_name = chosen_hash[pos]
+		piece = player.pieces[piece_name]
+		moves = @board.valid_moves(piece)
+		moves = @board.pretty_moves(moves)
+		puts "piece_name: #{piece_name}"
+		print "piece: "; p piece
+		print "moves: "; p moves
 		while 1
 			puts "where would you like to move?"
 			destination = gets.chomp.downcase
-			if valid_pos_name?(destination) && pos_on_board?
-				break
+			if valid_pos_name?(destination)
+				
 			else
 				puts "that's not a valid position :("
 			end
 		end
 
 	end
-
+	#   0x00007f8acf0bf520
+	#   0x00007f8acf0bf520
 	def valid_piece_name?(input)
 		names = ["pawn","rook","knight","bishop","queen","king"]
 		return true if names.any? { |n| n == input}
@@ -120,5 +128,25 @@ class Game
 	def play
 		test_start
 		turn(@player1)
+
+		
+=begin
+		puts "player"
+		p @player1
+		puts "\n\n\n\n"
+		#p @player2
+		puts "board.field"
+		p @board.field
+		puts "\n\n\n\n"
+		@player1.pieces.delete("b_rook_1")
+		puts "rook deleted"
+		puts "player"
+		p @player1
+		puts "\n\n\n\n"
+
+		puts "board.field"
+		p @board.field
+=end
+		#turn(@player1)
 	end
 end

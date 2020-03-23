@@ -48,6 +48,14 @@ class Board
 		puts ""
 	end
 
+	def update(pieces_hash)
+		pieces_hash.each do |name, piece|
+			arr_pos = board_to_arr(piece.pos)
+			field[arr_pos[0]][arr_pos[1]] = piece
+		end
+		
+	end
+
 	def board_to_arr(board_pos)
 		letter = board_pos[0]
 		num = board_pos[1].to_i
@@ -60,13 +68,6 @@ class Board
 		letter = (x + 97).chr
 		num = y + 1
 		board_pos = "#{letter}#{num}"
-	end
-
-	def populate(pieces_hash)
-		pieces_hash.each do |name, piece|
-			arr_pos = board_to_arr(piece.pos)
-			field[arr_pos[0]][arr_pos[1]] = piece
-		end
 	end
 
 	def occupied(arr_pos)
@@ -89,6 +90,7 @@ class Board
 		end
 		moves
 	end
+
 
 	def pawn_moves(piece)
 		moves = check_moves(piece)
@@ -134,15 +136,9 @@ class Board
 	def check_moves(piece)
 		arr_pos = board_to_arr(piece.pos)
 		direction_arr = piece.direction.clone
-=begin
-		print "direction_arr: "; p direction_arr
-		print "piece.direction: "; p piece.direction
-		print "piece object: "; p piece
-=end
 		moves = []
-		#p piece
+
 		until direction_arr.empty?
-			#print "direction:"; p piece.direction
 			x = arr_pos[0]
 			y = arr_pos[1]
 			curr_dir = direction_arr.shift
@@ -187,11 +183,6 @@ class Board
 				n += 1
 			end
 		end
-=begin
-		print "direction_arr: "; p direction_arr
-		print "piece.direction: "; p piece.direction
-		print "piece object: "; p piece
-=end
 		moves
 	end
 
