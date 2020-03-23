@@ -62,7 +62,7 @@ class Game
 			puts "there are #{choice}s at "
 			chosen_hash.keys.each {|k| print "#{k} "}
 			puts ""
-			sleep(0.7)
+
 			puts "which #{choice} do you want to move?"
 			pos = gets.chomp.downcase
 			if valid_pos_name?(pos)
@@ -82,19 +82,20 @@ class Game
 
 	def get_destination(board_moves,choice)
 		while 1
-			puts "where would you like to move your #{choice}? (input location)"
+			puts "where would you like to move your #{choice}?"
 			destination = gets.chomp.downcase
 			if board_moves.any? { |move| move == destination }
 				break
 			else
-				puts "your #{choice} piece can't move there :("
+				puts "your #{choice} can't move there :("
+				sleep(0.5)
 			end
 		end
 		destination
 	end
 
 
-	def turn(player)
+	def turn(player,other_player)
 		@board.show
 		puts "#{player.name}, your move!"
 		sleep(0.5)
@@ -111,15 +112,16 @@ class Game
 		piece = player.pieces[piece_name]
 		arr_moves = @board.valid_moves(piece) # array containing piece's possible moves in array format [0,0]
 		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
-		puts "piece_name: #{piece_name}"
-		print "piece: "; p piece
-		print "moves: "; p board_moves
 		destination = get_destination(board_moves,choice)
 
-		puts "you're moving to #{destination}!!"
+		taken_piece = @board.move_piece(piece,destination)
+		if taken_piece
+			taken_piece_name = other_player.pieces.key(taken_piece)
+			other_player.pieces.delete(taken_piece_name)
+		end
+		@board.show
 	end
-	#   0x00007f8acf0bf520
-	#   0x00007f8acf0bf520
+
 	def valid_piece_name?(input)
 		names = ["pawn","rook","knight","bishop","queen","king"]
 		return true if names.any? { |n| n == input}
@@ -131,10 +133,20 @@ class Game
 		false
 	end
 
+	def test_taking_piece
+		piece1 = @player2.pieces["w_pawn_2"]
+		@board.move_piece(piece1, "b5")
+		piece2 = @player1.pieces["b_pawn_1"]
+		@board.move_piece(piece2, "a4")
+	end
 
 	def play
 		test_start
-		turn(@player1)
+		#test_taking_piece
+		while 1
+			turn(@player1,@player2)
+			turn(@player2,@player1)
+		end
 
 		
 =begin

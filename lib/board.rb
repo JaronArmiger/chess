@@ -56,6 +56,30 @@ class Board
 		
 	end
 
+	def move_piece(piece,destination)
+		curr_pos = board_to_arr(piece.pos)
+		c_x = curr_pos[0]
+		c_y = curr_pos[1]
+
+		destination = board_to_arr(destination)
+		d_x = destination[0]
+		d_y = destination[1]
+		print "piece: "; p piece
+		print "curr_pos: "; p curr_pos
+		print "destination: "; p destination
+		if !occupied(destination) # if destination square is unoccopied
+			@field[d_x][d_y] = piece # move piece to destination
+			@field[c_x][c_y] = nil # erase it at old location
+			piece.pos = arr_to_board(destination) # update piece's position attribute
+		else # taking opponent's piece at destination square
+			taken_piece = @field[d_x][d_y] # save reference to opponent's piece at that square
+			@field[c_x][c_y] = nil # erase my piece at old location
+			@field[d_x][d_y] = piece # move piece to destination, erasing board's reference to opponent's piece
+			piece.pos = arr_to_board(destination)
+			return taken_piece # send reference to opponent's piece to Game, to be removed from player's pieces array
+		end
+	end
+
 	def board_to_arr(board_pos)
 		letter = board_pos[0]
 		num = board_pos[1].to_i
