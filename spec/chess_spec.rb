@@ -85,24 +85,27 @@ describe Board do
 	describe "#valid_moves" do
 		before { @rook = Rook.new('a1','black')
 				 @board.field[0][0] = @rook
-				 @board.show
-				 #print "valid_moves in before: "; p @board.valid_moves(@rook)
-=begin
+
 				 @pawn = Pawn.new('b2', 'black')
 				 @board.field[1][1] = @pawn
 
 				 @knight = Knight.new('c4','black')
 				 @board.field[2][3] = @knight 
-=end
+
 				  }
 		it "returns same output as #check_moves for rook" do
-			print "rook before #moves: "; p @rook
 			moves = @board.check_moves(@rook)
-			print "check_moves(@rook) =>"; p moves
-			print "rook after #moves: "; p @rook
-			#@board.show
-			print "valid_moves(@rook) => "; p @board.valid_moves(@rook)
 			expect(@board.valid_moves(@rook)).to eql(moves)
+		end
+
+		it "returns the same output as #pawn_moves for pawn" do
+			moves = @board.pawn_moves(@pawn)
+			expect(@board.valid_moves(@pawn)).to eql(moves)
+		end
+
+		it "returns the same output as #knight_moves for knight" do
+			moves = @board.knight_moves(@knight)
+			expect(@board.valid_moves(@knight)).to eql(moves)
 		end
 	end
 end
