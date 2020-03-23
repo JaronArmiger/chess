@@ -64,7 +64,7 @@ class Game
 			puts ""
 			puts "which #{choice} do you want to move?"
 			pos = gets.chomp.downcase
-			if pos.length == 2 && (pos[0] =~ /[a-z]/) && (pos[1] =~ /\d/)
+			if valid_pos_name?(pos)
 				if chosen_hash.values.any? { |v| v == pos }
 					break
 				else
@@ -93,15 +93,28 @@ class Game
 		else
 			pos = chosen_hash.values[0]
 		end
-		puts pos
+		while 1
+			puts "where would you like to move?"
+			destination = gets.chomp.downcase
+			if valid_pos_name?(destination)
+				break
+			else
+				puts "that's not a valid position"
+		end
+
 	end
 
 	def valid_piece_name?(input)
 		names = ["pawn","rook","knight","bishop","queen","king"]
-		return true if names.any? { |name| name == input}
+		return true if names.any? { |n| n == input}
 		false
 	end
 
+	def valid_pos_name?(pos)
+		return true if pos.length == 2 && (pos[0] =~ /[a-z]/) && (pos[1] =~ /\d/)
+		false
+	end
+	
 	
 
 	def play
