@@ -37,16 +37,27 @@ class Game
 			choice = gets.chomp.downcase
 			if valid_piece_name?(choice)
 				chosen_hash = {}
+				no_moves = false
 				player.pieces.each do |piece_name,piece_object|
-					if piece_name =~ /#{choice}/
-						#print "piece_name, piece"; p piece_name; p piece;
-						chosen_hash[piece_object.pos] = piece_name
+					#print "piece_name, piece"; p piece_name; p piece_object;
+					if piece_name =~ /#{choice}/ # if you have one of those pieces (ex if you have at least one pawn)
+						moves = @board.valid_moves(piece_object)
+						if moves.empty? # check if chosen piece can even move anywhere		
+							no_moves = true
+						else
+							
+							chosen_hash[piece_object.pos] = piece_name # if it can, put it in chosen_hash, but if not player will be prompted for another choice
+						end
 					end
 				end
-				if chosen_hash.length > 0
+				print "chosen_hash "; p chosen_hash
+				puts ""
+				if chosen_hash.length > 0 
 					break
-				else
-					puts "you don't have that piece :( choose a different one"
+				elsif chosen_hash.empty? && no_moves
+					puts "your #{choice} has nowhere to move :( choose a different piece"
+				else 
+					puts "you don't have any #{choice}s :( choose a different piece"
 					sleep(0.7)
 				end
 			else
@@ -54,6 +65,7 @@ class Game
 				sleep(0.7)
 			end
 		end
+
 		return chosen_hash, choice
 	end
 
@@ -99,9 +111,9 @@ class Game
 		@board.show
 		puts "#{player.name}, your move!"
 		sleep(0.5)
-		chosen_arr = get_chosen_arr(player)
-		chosen_hash = chosen_arr[0]
-		choice = chosen_arr[1]
+		chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
+		chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
+		choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
 		#print "chosen_hash"; p chosen_hash
 		if chosen_hash.length > 1
 			pos = choose_piece(chosen_hash,choice)
@@ -119,7 +131,7 @@ class Game
 			taken_piece_name = other_player.pieces.key(taken_piece)
 			other_player.pieces.delete(taken_piece_name)
 		end
-		@board.show
+
 	end
 
 	def valid_piece_name?(input)
@@ -129,7 +141,7 @@ class Game
 	end
 
 	def valid_pos_name?(pos)
-		return true if pos.length == 2 && (pos[0] >= "a" && pos[0] <= "g") && (pos[1].to_i >= 1 && pos[1].to_i <= 8)
+		return true if pos.length == 2 && (pos[0] >= "a" && pos[0] <= "h") && (pos[1].to_i >= 1 && pos[1].to_i <= 8)
 		false
 	end
 

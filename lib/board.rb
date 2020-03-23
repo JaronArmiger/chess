@@ -121,8 +121,12 @@ class Board
 		arr_pos = board_to_arr(piece.pos)
 		x = arr_pos[0]
 		y = arr_pos[1]
-		up_left = field[x-1][y+1]
-		up_right = field[x+1][y+1]
+		if (x-1 >= 0 && x-1 < 8) && (y+1 >= 0 && y+1 < 8)
+			up_left = field[x-1][y+1]
+		end
+		if (x+1 >= 0 && x+1 < 8) && (y+1 >= 0 && y+1 < 8)
+			up_right = field[x+1][y+1]
+		end
 		if !up_left.nil?
 			if !(up_left.color == piece.color)
 				moves << [x-1,y+1]
