@@ -14,9 +14,9 @@ game = Game.new
 game.play
 =end
 
-player1 = Player.new("the weeknd", "black")
+#player1 = Player.new("the weeknd", "black")
 #player1.list_pieces
-player2 = Player.new("demany", "white")
+#player2 = Player.new("demany", "white")
 #player2.list_pieces
 
 board = Board.new
@@ -31,12 +31,19 @@ board.field[3][4] = queen
 new_pawn = Pawn.new('d6','black')
 board.field[3][5] = new_pawn
 =end
+
+=begin
 knight = Knight.new('c4','black')
 board.field[2][3] = knight
+=end
+
+rook = Rook.new('a1','black')
+board.field[0][0] = rook
+
 board.show
-moves = board.knight_moves(knight)
+moves = board.valid_moves(rook)
 p moves
-p board.pretty_moves(moves)
+#p board.pretty_moves(moves)
 
 =begin
 board.populate(player1.pieces)

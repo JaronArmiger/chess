@@ -84,6 +84,7 @@ class Board
 		elsif piece.is_a? Knight
 			moves = knight_moves(piece)
 		else
+
 			moves = check_moves(piece)
 		end
 		moves
@@ -132,13 +133,19 @@ class Board
 
 	def check_moves(piece)
 		arr_pos = board_to_arr(piece.pos)
+		direction_arr = piece.direction.clone
+=begin
+		print "direction_arr: "; p direction_arr
+		print "piece.direction: "; p piece.direction
+		print "piece object: "; p piece
+=end
 		moves = []
 		#p piece
-		until piece.direction.empty?
+		until direction_arr.empty?
 			#print "direction:"; p piece.direction
 			x = arr_pos[0]
 			y = arr_pos[1]
-			curr_dir = piece.direction.shift
+			curr_dir = direction_arr.shift
 			n = 1
 			until n == piece.limit + 1
 				case curr_dir
@@ -180,6 +187,11 @@ class Board
 				n += 1
 			end
 		end
+=begin
+		print "direction_arr: "; p direction_arr
+		print "piece.direction: "; p piece.direction
+		print "piece object: "; p piece
+=end
 		moves
 	end
 
