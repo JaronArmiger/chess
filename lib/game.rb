@@ -100,6 +100,7 @@ class Game
 				break
 			else
 				puts "that's not a valid position"
+			end
 		end
 
 	end
@@ -115,7 +116,10 @@ class Game
 		false
 	end
 	
-	
+	def pos_on_board?(pos)
+		return true if pos.length == 2 && (pos[0] >= "a" && pos[0] <= "g") && (pos[1].to_i >= 1 && pos[1].to_i <= 8)
+		false
+	end
 
 	def play
 		test_start

@@ -9,6 +9,20 @@ require './lib/bishop.rb'
 require './lib/king.rb'
 require './lib/queen.rb'
 
+describe Game do
+	before { @game = Game.new }
+	describe "#pos_on_board?" do
+		it "returns true if pos is on board" do
+			expect(@game.pos_on_board?("a1")).to be true
+		end
+
+		it "returns false if pos is not on board" do
+			expect(@game.pos_on_board?("u1")).to be false
+		end
+	end
+end
+
+
 describe Board do
 	before { 	@board = Board.new 
 				}
