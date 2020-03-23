@@ -31,10 +31,7 @@ class Game
 		@board.show
 	end
 
-	def turn(player)
-		@board.show
-		puts "#{player.name}, your move!"
-		sleep(0.5)
+	def get_chosen_hash
 		while 1
 			puts "which piece do you want to move?"
 			piece = gets.chomp.downcase
@@ -57,7 +54,18 @@ class Game
 				sleep(0.7)
 			end
 		end
-		p chosen_hash
+		chosen_hash
+	end
+
+	def turn(player)
+		@board.show
+		puts "#{player.name}, your move!"
+		sleep(0.5)
+		chosen_hash = get_chosen_hash
+		if chosen_hash.length > 1
+
+		else
+		end
 	end
 
 	def valid_piece_name?(input)
