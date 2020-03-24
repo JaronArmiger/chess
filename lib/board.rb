@@ -109,6 +109,8 @@ class Board
 			moves = pawn_moves(piece)
 		elsif piece.is_a? Knight
 			moves = knight_moves(piece)
+		elsif piece.is_a? King
+			moves = king_moves(piece)
 		else
 
 			moves = check_moves(piece)
@@ -192,6 +194,10 @@ class Board
 			end
 		end
 		moves
+	end
+
+	def king_moves(piece)
+		moves = check_moves(piece)
 	end
 
 	def check_moves(piece)
@@ -305,6 +311,17 @@ class Board
 			pretty_arr << arr_to_board(pair)
 		end
 		pretty_arr
+	end
+
+	def all_moves(pieces_hash)
+		pieces = pieces_hash.values
+		moves_arr = []
+		pieces.each do |piece|
+			piece_moves = valid_moves(piece)
+			moves_arr << piece_moves
+		end
+		moves_arr.flatten!
+		moves_arr.uniq!
 	end
 
 
