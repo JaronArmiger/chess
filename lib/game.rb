@@ -156,10 +156,8 @@ class Game
 
 	def turn(player,other_player)
 		puts "#{player.name}, your move!"
-		checks = check_or_checkmate(player,other_player)
-		check = check_or_checkmate[0]
-		checkmate = check_or_checkmate[1]
-		if check
+		if player.check # if player is in check
+
 			piece = player["king"]
 		else
 			chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
@@ -192,6 +190,10 @@ class Game
 			sleep(0.7)
 		end
 		
+		if check?(other_player,player) #check if you put opponent's king in check
+			other_player.check = true
+			puts "#{other_player.name}, CHECK!"
+		end
 		@board.show
 	end
 
