@@ -37,23 +37,29 @@ class Game
 			choice = gets.chomp.downcase
 			if valid_piece_name?(choice)
 				chosen_hash = {}
-				no_moves = false
+				
 				player.pieces.each do |piece_name,piece_object|
 					#print "piece_name, piece"; p piece_name; p piece_object;
 					if piece_name =~ /#{choice}/ # if you have one of those pieces (ex if you have at least one pawn)
-						moves = @board.valid_moves(piece_object)
-						if moves.empty? # check if chosen piece can even move anywhere		
-							no_moves = true
-						else
-							
-							chosen_hash[piece_object.pos] = piece_name # if it can, put it in chosen_hash, but if not player will be prompted for another choice
-						end
+						chosen_hash[piece_object.pos] = piece_name # if it can, put it in chosen_hash, but if not player will be prompted for another choice
 					end
 				end
 				#print "chosen_hash "; p chosen_hash
 				#puts ""
 				if chosen_hash.length > 0 
-					break
+					valid_pieces = []
+					chosen_hash.values.each do |piece_name|
+						piece = player.pieces[piece_name]
+						moves = @board.valid_moves(piece)
+						if !moves.empty? #if piece has moves put its name in valid_pieces array
+							valid_pieces << piece_name
+						end
+					end
+					if !valid_pieces.empty? # if there's at least one valid piece, move on
+						break
+					else
+						puts "none of your #{choice}s have any where to move :( choose a different piece!"
+					end
 				elsif chosen_hash.empty? && no_moves
 					puts "your #{choice} has nowhere to move :( choose a different piece"
 				else 
@@ -69,7 +75,7 @@ class Game
 		return chosen_hash, choice
 	end
 
-	def choose_piece(chosen_hash,choice)
+	def choose_piece(chosen_hash,choice,pieces_hash)
 		while 1
 			puts "you have #{choice}s at "
 			chosen_hash.keys.each {|k| print "#{k} "}
@@ -78,8 +84,14 @@ class Game
 			puts "which #{choice} do you want to move?"
 			pos = gets.chomp.downcase
 			if valid_pos_name?(pos)
-				if chosen_hash.keys.any? { |k| k == pos }
-					break
+				if chosen_hash.keys.any? { |k| k == pos } # do you have this piece at that pos
+					piece_name = chosen_hash[pos]
+					moves = @board.valid_moves(pieces_hash[piece_name])
+					if !moves.empty? # if piece has moves
+						break
+					else
+						puts "that #{choice} has nowhere to move :("
+					end
 				else
 					puts "you don't have a #{choice} on that square :("
 					sleep(0.5)
@@ -108,21 +120,22 @@ class Game
 
 	def simplify_name(given_name)
 		if given_name =~ /queen/ || given_name =~ /king/
-			simple_name = given_name[2..0]
+			simple_name = given_name[2..-1]
 		else
 			simple_name = given_name[2..-3]
 		end
 		return simple_name
 	end
+
 	def turn(player,other_player)
-		
 		puts "#{player.name}, your move!"
 		chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
 		chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
+		#print "chosen_hash"; p chosen_hash
 		choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
 		#print "chosen_hash"; p chosen_hash
 		if chosen_hash.length > 1
-			pos = choose_piece(chosen_hash,choice)
+			pos = choose_piece(chosen_hash,choice,player.pieces)
 		else
 			pos = chosen_hash.keys[0]
 		end
@@ -141,8 +154,10 @@ class Game
 			taken_piece_name = other_player.pieces.key(taken_piece)
 			other_player.pieces.delete(taken_piece_name)
 			piece_name = simplify_name(taken_piece_name)
-			puts "#{other_player.name}! Your #{piece_name} was taken!"
+			puts "#{other_player.name}! #{player.name} captured your #{piece_name}!"
+			sleep(0.7)
 		end
+		
 		@board.show
 	end
 
@@ -158,16 +173,22 @@ class Game
 	end
 
 	def test_setup
-		piece1 = @player2.pieces["w_pawn_4"]
-		@board.move_piece(piece1, "d5")
-		piece2 = @player1.pieces["b_pawn_4"]
-		@board.move_piece(piece2, "d4")
+		w_pawn_4 = @player2.pieces["w_pawn_4"]
+		@board.move_piece(w_pawn_4, "d5")
+		b_pawn_4 = @player1.pieces["b_pawn_4"]
+		@board.move_piece(b_pawn_4, "d4")
+		b_queen = @player1.pieces["b_queen"]
+		@board.move_piece(b_queen, "a5")
+		w_queen = @player2.pieces["w_queen"]
+		@board.move_piece(w_queen, "a4")
+
 	end
 
 	def play
 		test_start
 		test_setup
 		@board.show
+		#p @player1.pieces
 		while 1
 			turn(@player1,@player2)
 			turn(@player2,@player1)
