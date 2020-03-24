@@ -188,6 +188,27 @@ class Game
 		@board.show
 	end
 
+	def check_or_checkmate(player,other_player)
+		king = player.pieces["king"]
+		king_at = king.pos
+		king_moves = @board.valid_moves(king)
+		cant_go = []
+
+		under_threat = all_moves(other_player.pieces)
+		check = false
+		checkmate = false
+		check = true if under_threat.any? { |square| square == king_at } # if king's location is under attack
+		king_moves.each_with_index do |king_move, idx|
+			if under_threat.any? { |square| square == king_move }
+				cant_go << king_move
+			end
+		end
+		if check && king_moves.length == cant_go.length
+			checkmate = true
+		end
+		return check, checkmate
+	end
+
 	def valid_piece_name?(input)
 		names = ["pawn","rook","knight","bishop","queen","king"]
 		return true if names.any? { |n| n == input}
@@ -200,13 +221,14 @@ class Game
 	end
 
 	def test_setup
-		w_pawn_4 = @player2.pieces["w_pawn_4"]
+		w_pawn_4 = @player2.pieces["pawn_4"]
+		p w_pawn_4
 		@board.move_piece(w_pawn_4, "d5")
-		b_pawn_4 = @player1.pieces["b_pawn_4"]
+		b_pawn_4 = @player1.pieces["pawn_4"]
 		@board.move_piece(b_pawn_4, "d4")
-		b_queen = @player1.pieces["b_queen"]
+		b_queen = @player1.pieces["queen"]
 		@board.move_piece(b_queen, "a5")
-		w_queen = @player2.pieces["w_queen"]
+		w_queen = @player2.pieces["queen"]
 		@board.move_piece(w_queen, "a4")
 		@board.move_piece(b_queen, "b5")
 	end
