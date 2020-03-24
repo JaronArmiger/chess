@@ -1,9 +1,10 @@
 class Player
-	attr_accessor :name, :color, :pieces
+	attr_accessor :name, :color, :pieces, :check
 	def initialize(name,color)
 		@name = name
 		@color = color
 		@pieces = make_pieces
+		@check = false
 	end
 
 	def make_pieces

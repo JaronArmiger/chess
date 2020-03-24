@@ -156,19 +156,26 @@ class Game
 
 	def turn(player,other_player)
 		puts "#{player.name}, your move!"
-		chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
-		chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
-		#print "chosen_hash"; p chosen_hash
-		choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
-		#print "chosen_hash"; p chosen_hash
-		if chosen_hash.length > 1
-			pos = choose_piece(chosen_hash,choice,player.pieces)
+		checks = check_or_checkmate(player,other_player)
+		check = check_or_checkmate[0]
+		checkmate = check_or_checkmate[1]
+		if check
+			piece = player["king"]
 		else
-			pos = chosen_hash.keys[0]
+			chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
+			chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
+			#print "chosen_hash"; p chosen_hash
+			choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
+			#print "chosen_hash"; p chosen_hash
+			if chosen_hash.length > 1
+				pos = choose_piece(chosen_hash,choice,player.pieces)
+			else
+				pos = chosen_hash.keys[0]
+			end
+			#print "pos"; p pos
+			piece_name = chosen_hash[pos]
+			piece = player.pieces[piece_name]
 		end
-		#print "pos"; p pos
-		piece_name = chosen_hash[pos]
-		piece = player.pieces[piece_name]
 		arr_moves = @board.valid_moves(piece) # array containing piece's possible moves in array format [0,0]
 		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
 		#print "arr_moves"; p arr_moves
