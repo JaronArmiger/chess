@@ -113,7 +113,7 @@ class Board
 
 			moves = check_moves(piece)
 		end
-		moves = pretty_moves(moves)
+		moves
 	end
 
 
@@ -165,7 +165,7 @@ class Board
 			end
 		end
 		
-		moves
+		moves = pretty_moves(moves)
 	end
 
 	def knight_moves(piece)
@@ -191,7 +191,7 @@ class Board
 				end
 			end
 		end
-		moves
+		moves  = pretty_moves(moves)
 	end
 
 
@@ -297,7 +297,7 @@ class Board
 				end
 			end
 		end
-		moves
+		moves  = pretty_moves(moves)
 	end
 
 	def pretty_moves(moves_arr)
