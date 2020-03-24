@@ -31,40 +31,50 @@ class Game
 		@board.show
 	end
 
-	def get_chosen_arr(player)
+	def get_chosen_arr(player,other_player)
 		while 1
 			puts "which piece do you want to move?"
 			choice = gets.chomp.downcase
 			if valid_piece_name?(choice)
-				chosen_hash = {}
-				
-				player.pieces.each do |piece_name,piece_object|
-					#print "piece_name, piece"; p piece_name; p piece_object;
-					if piece_name =~ /#{choice}/ # if you have one of those pieces (ex if you have at least one pawn)
-						chosen_hash[piece_object.pos] = piece_name # if it can, put it in chosen_hash, but if not player will be prompted for another choice
-					end
-				end
-				#print "chosen_hash "; p chosen_hash
-				#puts ""
-				if chosen_hash.length > 0 
-					valid_pieces = []
-					chosen_hash.values.each do |piece_name|
-						piece = player.pieces[piece_name]
-						moves = @board.valid_moves(piece)
-						if !moves.empty? #if piece has moves put its name in valid_pieces array
-							valid_pieces << piece_name
-						end
-					end
-					if !valid_pieces.empty? # if there's at least one valid piece, move on
+				if choice == 'king'
+					if king_has_moves(player,other_player)
+						king_object = player.pieces['king']
+						chosen_hash = {king_object.pos => 'king'}
 						break
 					else
-						puts "none of your #{choice}s have any where to move :( choose a different piece!"
+						puts "your king has nowhere to move! choose a different piece"
 					end
-				elsif chosen_hash.empty? && no_moves
-					puts "your #{choice} has nowhere to move :( choose a different piece"
-				else 
-					puts "you don't have any #{choice}s :( choose a different piece"
-					sleep(0.7)
+				else
+					chosen_hash = {}
+					
+					player.pieces.each do |piece_name,piece_object|
+						#print "piece_name, piece"; p piece_name; p piece_object;
+						if piece_name =~ /#{choice}/ # if you have one of those pieces (ex if you have at least one pawn)
+							chosen_hash[piece_object.pos] = piece_name # if it can, put it in chosen_hash, but if not player will be prompted for another choice
+						end
+					end
+					#print "chosen_hash "; p chosen_hash
+					#puts ""
+					if chosen_hash.length > 0 
+						valid_pieces = []
+						chosen_hash.values.each do |piece_name|
+							piece = player.pieces[piece_name]
+							moves = @board.valid_moves(piece)
+							if !moves.empty? #if piece has moves put its name in valid_pieces array
+								valid_pieces << piece_name
+							end
+						end
+						if !valid_pieces.empty? # if there's at least one valid piece, move on
+							break
+						else
+							puts "none of your #{choice}s have anywhere to move :( choose a different piece!"
+						end
+					elsif chosen_hash.empty? && no_moves
+						puts "your #{choice} has nowhere to move :( choose a different piece"
+					else 
+						puts "you don't have any #{choice}s :( choose a different piece"
+						sleep(0.7)
+					end
 				end
 			else
 				puts "enter a valid piece name. you know what they are -__-"
@@ -104,12 +114,13 @@ class Game
 		pos
 	end
 
+
+
 	def all_moves(pieces_hash)
 		pieces = pieces_hash.values
 		moves_arr = []
 		pieces.each do |piece|
 			piece_moves = @board.valid_moves(piece)
-			piece_moves = @board.pretty_moves(piece_moves)
 			moves_arr << piece_moves
 		end
 		moves_arr.flatten.uniq.sort
@@ -147,9 +158,9 @@ class Game
 
 	def simplify_name(given_name)
 		if given_name =~ /queen/ || given_name =~ /king/
-			simple_name = given_name[2..-1]
+			simple_name = given_name
 		else
-			simple_name = given_name[2..-3]
+			simple_name = given_name[0..-3]
 		end
 		return simple_name
 	end
@@ -161,7 +172,7 @@ class Game
 			choice = "king"
 			puts "you have no choice but to move your king!"
 		else
-			chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
+			chosen_arr = get_chosen_arr(player,other_player) # this function is where player inputs piece that they want to move
 			chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
 			#print "chosen_hash"; p chosen_hash
 			choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
@@ -175,8 +186,7 @@ class Game
 			piece_name = chosen_hash[pos]
 			piece = player.pieces[piece_name]
 		end
-		arr_moves = @board.valid_moves(piece) # array containing piece's possible moves in array format [0,0]
-		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
+		board_moves = @board.valid_moves(piece) # array containing possible moves in board format "a1"
 		#print "arr_moves"; p arr_moves
 		#print "board_moves"; p board_moves
 		destination = get_destination(board_moves,choice,other_player)
@@ -188,7 +198,7 @@ class Game
 			other_player.pieces.delete(taken_piece_name)
 			piece_name = simplify_name(taken_piece_name)
 			puts "#{other_player.name}! #{player.name} captured your #{piece_name}!"
-			sleep(0.7)
+			sleep(1)
 		end
 		@board.show
 		if check?(other_player,player) #check if you put opponent's king in check
@@ -209,30 +219,33 @@ class Game
 			player.check = true
 			return true
 		else
+			player.check = false
 			false
 		end
 	end
 
-	def checkmate?(player,other_player)
-		checkmate = false
-		#puts "check?: #{player.check}"
-		if player.check
-			king = player.pieces["king"]
-			king_at = king.pos
-			king_moves = @board.valid_moves(king)
-			king_moves = @board.pretty_moves(king_moves)
-			cant_go = []
-			#print "king_moves "; p king_moves
-			under_threat = all_moves(other_player.pieces)
-			#print "under_threat"; p under_threat
-			king_moves.each_with_index do |king_move, idx|
-				if under_threat.any? { |square| square == king_move }
-					cant_go << king_move
-				end
+	def king_has_moves(player,other_player)
+		has_moves = true
+		king = player.pieces["king"]
+		king_at = king.pos
+		king_moves = @board.valid_moves(king)
+		cant_go = []
+		#print "king_moves "; p king_moves
+		under_threat = all_moves(other_player.pieces)
+		#print "under_threat"; p under_threat
+		king_moves.each_with_index do |king_move, idx|
+			if under_threat.any? { |square| square == king_move }
+				cant_go << king_move
 			end
-			checkmate = true if king_moves.length == cant_go.length
 		end
-		checkmate
+		has_moves = false if king_moves.length == cant_go.length
+		has_moves
+	end
+
+	def checkmate?(player,other_player)
+		#puts "check?: #{player.check}"
+		return checkmate = true if player.check && !king_has_moves(player,other_player)
+		false
 	end
 
 

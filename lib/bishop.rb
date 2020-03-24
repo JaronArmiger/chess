@@ -1,8 +1,9 @@
 class Bishop
-	attr_accessor :pos, :color, :sym, :direction, :limit
-	def initialize(pos, color)
+	attr_accessor :pos, :color, :sym, :direction, :limit, :moved_yet
+	def initialize(pos,color)
 		@pos = pos
 		@color = color
+
 		if color == 'black'
 			@sym = "\u{265D}"
 		elsif color == 'white'
@@ -11,5 +12,7 @@ class Bishop
 
 		@direction = ['up-left','up-right','down-left','down-right']
 		@limit = 9
+		@moved_yet = false
 	end
+	
 end

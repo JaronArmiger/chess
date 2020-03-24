@@ -57,6 +57,7 @@ class Board
 	end
 
 	def move_piece(piece,destination)
+		piece.moved_yet = true
 		curr_pos = board_to_arr(piece.pos)
 		c_x = curr_pos[0]
 		c_y = curr_pos[1]
@@ -133,13 +134,13 @@ class Board
 
 			if !up_left.nil?
 				if !(up_left.color == piece.color)
-					moves << [x-1,y+1]
+					moves << arr_to_board([x-1,y+1])
 				end
 			end
 
 			if !up_right.nil?
 				if !(up_right.color == piece.color)
-					moves << [x+1,y+1]
+					moves << arr_to_board([x+1,y+1])
 				end
 			end
 
@@ -154,18 +155,18 @@ class Board
 
 			if !up_left.nil?
 				if !(up_left.color == piece.color)
-					moves << [x-1,y-1]
+					moves << arr_to_board([x-1,y-1])
 				end
 			end
 
 			if !up_right.nil?
 				if !(up_right.color == piece.color)
-					moves << [x+1,y-1]
+					moves << arr_to_board([x+1,y-1])
 				end
 			end
 		end
 		
-		moves = pretty_moves(moves)
+		moves
 	end
 
 	def knight_moves(piece)
@@ -297,7 +298,7 @@ class Board
 				end
 			end
 		end
-		moves  = pretty_moves(moves)
+		moves = pretty_moves(moves)
 	end
 
 	def pretty_moves(moves_arr)

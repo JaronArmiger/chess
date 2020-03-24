@@ -1,5 +1,5 @@
 class Knight
-	attr_accessor :pos, :color, :sym, :direction, :limit
+	attr_accessor :pos, :color, :sym, :direction, :limit, :moved_yet
 	def initialize(pos, color)
 		@pos = pos
 		@color = color
@@ -11,5 +11,6 @@ class Knight
 
 		@direction = nil
 		@limit = nil
+		@moved_yet = false
 	end
 end
