@@ -109,8 +109,6 @@ class Board
 			moves = pawn_moves(piece)
 		elsif piece.is_a? Knight
 			moves = knight_moves(piece)
-		elsif piece.is_a? King
-			moves = king_moves(piece)
 		else
 
 			moves = check_moves(piece)
@@ -196,9 +194,6 @@ class Board
 		moves
 	end
 
-	def king_moves(piece)
-		moves = check_moves(piece)
-	end
 
 	def check_moves(piece)
 		#puts "piece.pos #{piece.pos}"
@@ -318,10 +313,10 @@ class Board
 		moves_arr = []
 		pieces.each do |piece|
 			piece_moves = valid_moves(piece)
+			piece_moves = pretty_moves(piece_moves)
 			moves_arr << piece_moves
 		end
-		moves_arr.flatten!
-		moves_arr.uniq!
+		moves_arr.flatten.uniq.sort
 	end
 
 

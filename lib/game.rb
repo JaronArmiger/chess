@@ -104,15 +104,30 @@ class Game
 		pos
 	end
 
+	def all_moves(pieces_hash)
+		pieces = pieces_hash.values
+		moves_arr = []
+		pieces.each do |piece|
+			piece_moves = valid_moves(piece)
+			piece_moves = pretty_moves(piece_moves)
+			moves_arr << piece_moves
+		end
+		moves_arr.flatten.uniq.sort
+	end
+	
 	def get_destination(board_moves,choice)
 		while 1
 			puts "where would you like to move your #{choice}?"
 			destination = gets.chomp.downcase
-			if board_moves.any? { |move| move == destination }
-				break
+			if choice == "king"
+
 			else
-				puts "your #{choice} can't move there :("
-				sleep(0.5)
+				if board_moves.any? { |move| move == destination }
+					break
+				else
+					puts "your #{choice} can't move there :("
+					sleep(0.5)
+				end
 			end
 		end
 		destination
