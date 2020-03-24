@@ -64,13 +64,14 @@ class Board
 		destination = board_to_arr(destination)
 		d_x = destination[0]
 		d_y = destination[1]
-		print "piece: "; p piece
-		print "curr_pos: "; p curr_pos
-		print "destination: "; p destination
+		#print "piece: "; p piece
+		#print "curr_pos: "; p curr_pos
+		#print "destination: "; p destination
 		if !occupied(destination) # if destination square is unoccopied
 			@field[d_x][d_y] = piece # move piece to destination
 			@field[c_x][c_y] = nil # erase it at old location
 			piece.pos = arr_to_board(destination) # update piece's position attribute
+			return nil
 		else # taking opponent's piece at destination square
 			taken_piece = @field[d_x][d_y] # save reference to opponent's piece at that square
 			@field[c_x][c_y] = nil # erase my piece at old location
@@ -121,22 +122,49 @@ class Board
 		arr_pos = board_to_arr(piece.pos)
 		x = arr_pos[0]
 		y = arr_pos[1]
-		if (x-1 >= 0 && x-1 < 8) && (y+1 >= 0 && y+1 < 8)
-			up_left = field[x-1][y+1]
-		end
-		if (x+1 >= 0 && x+1 < 8) && (y+1 >= 0 && y+1 < 8)
-			up_right = field[x+1][y+1]
-		end
-		if !up_left.nil?
-			if !(up_left.color == piece.color)
-				moves << [x-1,y+1]
+		if piece.color == 'black'
+			if (x-1 >= 0 && x-1 < 8) && (y+1 >= 0 && y+1 < 8)
+				up_left = field[x-1][y+1]
+			end
+
+			if (x+1 >= 0 && x+1 < 8) && (y+1 >= 0 && y+1 < 8)
+				up_right = field[x+1][y+1]
+			end
+
+			if !up_left.nil?
+				if !(up_left.color == piece.color)
+					moves << [x-1,y+1]
+				end
+			end
+
+			if !up_right.nil?
+				if !(up_right.color == piece.color)
+					moves << [x+1,y+1]
+				end
+			end
+
+		elsif piece.color = 'white'
+			if (x-1 >= 0 && x-1 < 8) && (y-1 >= 0 && y-1 < 8)
+				up_left = field[x-1][y-1]
+			end
+
+			if (x+1 >= 0 && x+1 < 8) && (y-1 >= 0 && y-1 < 8)
+				up_right = field[x+1][y-1]
+			end
+
+			if !up_left.nil?
+				if !(up_left.color == piece.color)
+					moves << [x-1,y-1]
+				end
+			end
+
+			if !up_right.nil?
+				if !(up_right.color == piece.color)
+					moves << [x+1,y-1]
+				end
 			end
 		end
-		if !up_right.nil?
-			if !(up_right.color == piece.color)
-				moves << [x+1,y+1]
-			end
-		end
+		
 		moves
 	end
 
@@ -145,7 +173,12 @@ class Board
 		arr_pos = board_to_arr(piece.pos)
 		x = arr_pos[0]
 		y = arr_pos[1]
-		possible = [[x+1,y+2],[x+2,y+1],[x+2,y-1],[x+1,y-2],[x-1,y-2],[x-2,y-1],[x-2,y+1],[x-1,y+2]]
+		if piece.color == 'black'
+			possible = [[x+1,y+2],[x+2,y+1],[x+2,y-1],[x+1,y-2],[x-1,y-2],[x-2,y-1],[x-2,y+1],[x-1,y+2]]
+		elsif piece.color == 'white'
+			possible = [[x+1,y-2],[x+2,y-1],[x+2,y+1],[x+1,y+2],[x-1,y+2],[x-2,y+1],[x-2,y-1],[x-1,y-2]]
+		end
+			
 		possible.each do |pair|
 			x = pair[0]
 			y = pair[1]
@@ -162,53 +195,105 @@ class Board
 	end
 
 	def check_moves(piece)
+		#puts "piece.pos #{piece.pos}"
 		arr_pos = board_to_arr(piece.pos)
 		direction_arr = piece.direction.clone
 		moves = []
+		if piece.color == 'black'
+			until direction_arr.empty?
+				x = arr_pos[0]
+				y = arr_pos[1]
+				#puts "x: #{x}"
+				#puts "y: #{y}"
+				curr_dir = direction_arr.shift
+				#puts "curr_dir: #{curr_dir}"
+				n = 1
+				until n == piece.limit + 1
+					case curr_dir
+					when 'up'
+						y += 1
+					when 'down'
+						y -= 1
+					when 'left'
+						x -= 1
+					when 'right'
+						x += 1
+					when 'up-left'
+						x -= 1
+						y += 1
+					when 'up-right'
+						x += 1
+						y += 1
+					when 'down-left'
+						x -= 1
+						y -= 1
+					when 'down-right'
+						x += 1
+						y -= 1
+					end
+					if (x >= 0 && x < 8) && (y >= 0 && y < 8)   # next square on board?
+						next_square = field[x][y]
+					else
+						break
+					end
+					#print "next_square "; p next_square
+					if next_square.nil?
+						moves << [x,y]
+					elsif next_square.color == piece.color   # same team
+						break
+					else		# other team
+						moves << [x,y]
+						break
+					end
+					n += 1
+				end
+			end
+		elsif piece.color == 'white'
+			until direction_arr.empty?
+				x = arr_pos[0]
+				y = arr_pos[1]
+				curr_dir = direction_arr.shift
+				n = 1
+				until n == piece.limit + 1
+					case curr_dir
+					when 'up'
+						y -= 1
+					when 'down'
+						y += 1
+					when 'left'
+						x -= 1
+					when 'right'
+						x += 1
+					when 'up-left'
+						x -= 1
+						y -= 1
+					when 'up-right'
+						x += 1
+						y -= 1
+					when 'down-left'
+						x -= 1
+						y += 1
+					when 'down-right'
+						x += 1
+						y += 1
+					end
 
-		until direction_arr.empty?
-			x = arr_pos[0]
-			y = arr_pos[1]
-			curr_dir = direction_arr.shift
-			n = 1
-			until n == piece.limit + 1
-				case curr_dir
-				when 'up'
-					y += 1
-				when 'down'
-					y -= 1
-				when 'left'
-					x -= 1
-				when 'right'
-					x += 1
-				when 'up-left'
-					x -= 1
-					y += 1
-				when 'up-right'
-					x += 1
-					y += 1
-				when 'down-left'
-					x -= 1
-					y -= 1
-				when 'down-right'
-					x += 1
-					y -= 1
-				end
-				if (x >= 0 && x < 8) && (y >= 0 && y < 8)   # next square on board?
-					next_square = field[x][y]
-				else
-					break
-				end
+					if (x >= 0 && x < 8) && (y >= 0 && y < 8)   # next square on board?
+						next_square = field[x][y]
+					else
+						break
+					end
 
-				if next_square.nil?
-					moves << [x,y]
-				elsif next_square.color == piece.color   # same team
-					break
-				else		# other team
-					moves << [x,y]
-					break
+					if next_square.nil?
+						moves << [x,y]
+					elsif next_square.color == piece.color   # same team
+						break
+					else		# other team
+						moves << [x,y]
+						break
+					end
+					n += 1
 				end
-				n += 1
 			end
 		end
 		moves

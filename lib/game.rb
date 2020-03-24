@@ -50,8 +50,8 @@ class Game
 						end
 					end
 				end
-				print "chosen_hash "; p chosen_hash
-				puts ""
+				#print "chosen_hash "; p chosen_hash
+				#puts ""
 				if chosen_hash.length > 0 
 					break
 				elsif chosen_hash.empty? && no_moves
@@ -71,7 +71,7 @@ class Game
 
 	def choose_piece(chosen_hash,choice)
 		while 1
-			puts "there are #{choice}s at "
+			puts "you have #{choice}s at "
 			chosen_hash.keys.each {|k| print "#{k} "}
 			puts ""
 
@@ -106,11 +106,17 @@ class Game
 		destination
 	end
 
-
+	def simplify_name(given_name)
+		if given_name =~ /queen/ || given_name =~ /king/
+			simple_name = given_name[2..0]
+		else
+			simple_name = given_name[2..-3]
+		end
+		return simple_name
+	end
 	def turn(player,other_player)
-		@board.show
+		
 		puts "#{player.name}, your move!"
-		sleep(0.5)
 		chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
 		chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
 		choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
@@ -118,20 +124,26 @@ class Game
 		if chosen_hash.length > 1
 			pos = choose_piece(chosen_hash,choice)
 		else
-			pos = chosen_hash.values[0]
+			pos = chosen_hash.keys[0]
 		end
+		#print "pos"; p pos
 		piece_name = chosen_hash[pos]
 		piece = player.pieces[piece_name]
 		arr_moves = @board.valid_moves(piece) # array containing piece's possible moves in array format [0,0]
 		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
+		#print "arr_moves"; p arr_moves
+		#print "board_moves"; p board_moves
 		destination = get_destination(board_moves,choice)
 
 		taken_piece = @board.move_piece(piece,destination)
+		#print "taken_piece "; p taken_piece
 		if taken_piece
 			taken_piece_name = other_player.pieces.key(taken_piece)
 			other_player.pieces.delete(taken_piece_name)
+			piece_name = simplify_name(taken_piece_name)
+			puts "#{other_player.name}! Your #{piece_name} was taken!"
 		end
-
+		@board.show
 	end
 
 	def valid_piece_name?(input)
@@ -145,16 +157,17 @@ class Game
 		false
 	end
 
-	def test_taking_piece
-		piece1 = @player2.pieces["w_pawn_2"]
-		@board.move_piece(piece1, "b5")
-		piece2 = @player1.pieces["b_pawn_1"]
-		@board.move_piece(piece2, "a4")
+	def test_setup
+		piece1 = @player2.pieces["w_pawn_4"]
+		@board.move_piece(piece1, "d5")
+		piece2 = @player1.pieces["b_pawn_4"]
+		@board.move_piece(piece2, "d4")
 	end
 
 	def play
 		test_start
-		#test_taking_piece
+		test_setup
+		@board.show
 		while 1
 			turn(@player1,@player2)
 			turn(@player2,@player1)
