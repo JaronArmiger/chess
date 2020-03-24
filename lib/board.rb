@@ -113,7 +113,7 @@ class Board
 
 			moves = check_moves(piece)
 		end
-		moves
+		moves = pretty_moves(moves)
 	end
 
 

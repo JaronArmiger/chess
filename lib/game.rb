@@ -194,39 +194,47 @@ class Game
 		if check?(other_player,player) #check if you put opponent's king in check
 			other_player.check = true
 			puts "#{other_player.name}, CHECK!"
-			sleep(1)
+			sleep(0.7)
 		end
 		
 	end
 
 	def check?(player,other_player)
 		king = player.pieces["king"]
+		#print "king: "; p king
 		king_at = king.pos
 		under_threat = all_moves(other_player.pieces)
-		return true if under_threat.any? { |square| square == king_at } # if king's location is under attack
-		false
+		#print "under_threat"; p under_threat
+		if under_threat.any? { |square| square == king_at } # if king's location is under attack
+			player.check = true
+			return true
+		else
+			false
+		end
 	end
 
-	def check_or_checkmate(player,other_player)
-		king = player.pieces["king"]
-		king_at = king.pos
-		king_moves = @board.valid_moves(king)
-		cant_go = []
-
-		under_threat = all_moves(other_player.pieces)
-		check = false
+	def checkmate?(player,other_player)
 		checkmate = false
-		check = true if under_threat.any? { |square| square == king_at } # if king's location is under attack
-		king_moves.each_with_index do |king_move, idx|
-			if under_threat.any? { |square| square == king_move }
-				cant_go << king_move
+		#puts "check?: #{player.check}"
+		if player.check
+			king = player.pieces["king"]
+			king_at = king.pos
+			king_moves = @board.valid_moves(king)
+			king_moves = @board.pretty_moves(king_moves)
+			cant_go = []
+			#print "king_moves "; p king_moves
+			under_threat = all_moves(other_player.pieces)
+			#print "under_threat"; p under_threat
+			king_moves.each_with_index do |king_move, idx|
+				if under_threat.any? { |square| square == king_move }
+					cant_go << king_move
+				end
 			end
+			checkmate = true if king_moves.length == cant_go.length
 		end
-		if check && king_moves.length == cant_go.length
-			checkmate = true
-		end
-		return check, checkmate
+		checkmate
 	end
+
 
 	def valid_piece_name?(input)
 		names = ["pawn","rook","knight","bishop","queen","king"]
@@ -241,26 +249,44 @@ class Game
 
 	def test_setup
 		w_pawn_4 = @player2.pieces["pawn_4"]
-		p w_pawn_4
 		@board.move_piece(w_pawn_4, "d5")
 		b_pawn_4 = @player1.pieces["pawn_4"]
+		b_pawn_5 = @player1.pieces["pawn_5"]
 		@board.move_piece(b_pawn_4, "d4")
+		@board.move_piece(b_pawn_5, "e4")
 		b_queen = @player1.pieces["queen"]
+		b_bishop = @player1.pieces["bishop_2"]
 		@board.move_piece(b_queen, "a5")
 		w_queen = @player2.pieces["queen"]
 		@board.move_piece(w_queen, "a4")
 		@board.move_piece(b_queen, "b5")
+		@board.move_piece(b_queen, "d5")
+		#@board.move_piece(b_bishop, "b5")
 	end
 
 	def play
 		test_start
 		test_setup
 		@board.show
+		#p check?(@player2,@player1)
+		#print "checkmate? "; p checkmate?(@player2,@player1)
 		#p @player1.pieces
 		while 1
+			if checkmate?(@player1,@player2) # player 1 is in checkmate
+				winner = @player2
+				break
+			end
 			turn(@player1,@player2)
+			if checkmate?(@player2,@player1) # player 2 is in checkmate
+				
+				winner = @player1
+				break
+			end
 			turn(@player2,@player1)
 		end
+		puts "and CHECKMATE!!"
+		sleep(1)
+		puts "#{winner.name} is VICTORIOUS!!!"
 
 		
 =begin
