@@ -157,8 +157,9 @@ class Game
 	def turn(player,other_player)
 		puts "#{player.name}, your move!"
 		if player.check # if player is in check
-
-			piece = player["king"]
+			piece = player.pieces["king"]
+			choice = "king"
+			puts "you have no choice but to move your king!"
 		else
 			chosen_arr = get_chosen_arr(player) # this function is where player inputs piece that they want to move
 			chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
@@ -189,12 +190,21 @@ class Game
 			puts "#{other_player.name}! #{player.name} captured your #{piece_name}!"
 			sleep(0.7)
 		end
-		
+		@board.show
 		if check?(other_player,player) #check if you put opponent's king in check
 			other_player.check = true
 			puts "#{other_player.name}, CHECK!"
+			sleep(1)
 		end
-		@board.show
+		
+	end
+
+	def check?(player,other_player)
+		king = player.pieces["king"]
+		king_at = king.pos
+		under_threat = all_moves(other_player.pieces)
+		return true if under_threat.any? { |square| square == king_at } # if king's location is under attack
+		false
 	end
 
 	def check_or_checkmate(player,other_player)
