@@ -20,22 +20,22 @@ class Player
 		alpha = ["a","b","c","d","e","f","g","h"]
 		pre = color[0]
 		alpha.each_with_index do |letter, idx|
-			pieces["#{pre}_pawn_#{idx+1}"] = Pawn.new("#{letter}#{pawn_row}",color)
+			pieces["pawn_#{idx+1}"] = Pawn.new("#{letter}#{pawn_row}",color)
 		end
 
 
-		pieces["#{pre}_rook_1"] = Rook.new("a#{army_row}",color)
-		pieces["#{pre}_rook_2"] = Rook.new("h#{army_row}",color)
+		pieces["rook_1"] = Rook.new("a#{army_row}",color)
+		pieces["rook_2"] = Rook.new("h#{army_row}",color)
 
-		pieces["#{pre}_knight_1"] = Knight.new("b#{army_row}",color)
-		pieces["#{pre}_knight_2"] = Knight.new("g#{army_row}",color)
+		pieces["knight_1"] = Knight.new("b#{army_row}",color)
+		pieces["knight_2"] = Knight.new("g#{army_row}",color)
 
-		pieces["#{pre}_bishop_1"] = Bishop.new("c#{army_row}",color)
-		pieces["#{pre}_bishop_2"] = Bishop.new("f#{army_row}",color)
+		pieces["bishop_1"] = Bishop.new("c#{army_row}",color)
+		pieces["bishop_2"] = Bishop.new("f#{army_row}",color)
 
-		pieces["#{pre}_queen"] = Queen.new("e#{army_row}",color)
+		pieces["queen"] = Queen.new("e#{army_row}",color)
 
-		pieces["#{pre}_king"] = King.new("d#{army_row}",color)
+		pieces["king"] = King.new("d#{army_row}",color)
 		pieces
 	end
 

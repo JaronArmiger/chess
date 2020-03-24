@@ -308,16 +308,7 @@ class Board
 		pretty_arr
 	end
 
-	def all_moves(pieces_hash)
-		pieces = pieces_hash.values
-		moves_arr = []
-		pieces.each do |piece|
-			piece_moves = valid_moves(piece)
-			piece_moves = pretty_moves(piece_moves)
-			moves_arr << piece_moves
-		end
-		moves_arr.flatten.uniq.sort
-	end
+	
 
 
 

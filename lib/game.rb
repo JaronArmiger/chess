@@ -108,26 +108,38 @@ class Game
 		pieces = pieces_hash.values
 		moves_arr = []
 		pieces.each do |piece|
-			piece_moves = valid_moves(piece)
-			piece_moves = pretty_moves(piece_moves)
+			piece_moves = @board.valid_moves(piece)
+			piece_moves = @board.pretty_moves(piece_moves)
 			moves_arr << piece_moves
 		end
 		moves_arr.flatten.uniq.sort
 	end
-	
-	def get_destination(board_moves,choice)
+
+	def get_destination(board_moves,choice,other_player)
 		while 1
 			puts "where would you like to move your #{choice}?"
+			#print "board_moves "; p board_moves
 			destination = gets.chomp.downcase
-			if choice == "king"
 
-			else
-				if board_moves.any? { |move| move == destination }
-					break
+			if valid_pos_name?(destination) # if your input is formatted correctly
+				if board_moves.any? { |move| move == destination } # if your input is one of the piece's moves
+					if choice == 'king'
+						under_threat = all_moves(other_player.pieces)
+						if under_threat.any? { |square| square == destination }
+							puts "king can't move there because that square is under threat of attack!"
+						else
+							break
+						end
+					else
+						break
+					end
 				else
 					puts "your #{choice} can't move there :("
 					sleep(0.5)
 				end
+			else
+				puts "that's not a valid position :( try again"
+				sleep(0.7)
 			end
 		end
 		destination
@@ -161,7 +173,7 @@ class Game
 		board_moves = @board.pretty_moves(arr_moves) # array containing possible moves in board format "a1"
 		#print "arr_moves"; p arr_moves
 		#print "board_moves"; p board_moves
-		destination = get_destination(board_moves,choice)
+		destination = get_destination(board_moves,choice,other_player)
 
 		taken_piece = @board.move_piece(piece,destination)
 		#print "taken_piece "; p taken_piece
@@ -196,7 +208,7 @@ class Game
 		@board.move_piece(b_queen, "a5")
 		w_queen = @player2.pieces["w_queen"]
 		@board.move_piece(w_queen, "a4")
-
+		@board.move_piece(b_queen, "b5")
 	end
 
 	def play

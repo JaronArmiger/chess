@@ -16,8 +16,8 @@ player1 = Player.new("the weeknd", "black")
 #player1.list_pieces
 player2 = Player.new("demany", "white")
 #player2.list_pieces
-board = Board.new
-p board.all_moves(player1.pieces).sort
+#board = Board.new
+#p board.all_moves(player1.pieces).sort
 
-#game = Game.new
-#game.play
+game = Game.new
+game.play
