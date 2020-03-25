@@ -31,6 +31,80 @@ class Game
 		@board.show
 	end
 
+	def castle_start_black_left
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@player1.pieces.delete("knight_1")
+		@player1.pieces.delete("bishop_1")
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@board.update(@player2.pieces)
+		@board.show
+	end
+
+	def castle_start_black_right
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@player1.pieces.delete("knight_2")
+		@player1.pieces.delete("bishop_2")
+		@player1.pieces.delete("queen")
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@board.update(@player2.pieces)
+		@board.show
+	end	
+
+	def castle_start_black_both
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@player1.pieces.delete("knight_1")
+		@player1.pieces.delete("bishop_1")
+		@player1.pieces.delete("knight_2")
+		@player1.pieces.delete("bishop_2")
+		@player1.pieces.delete("queen")
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@board.update(@player2.pieces)
+		@board.show
+	end	
+
+	def castle_start_white_left
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@player2.pieces.delete("knight_1")
+		@player2.pieces.delete("bishop_1")
+		@board.update(@player2.pieces)
+		@board.show
+	end
+
+	def castle_start_white_right
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@player2.pieces.delete("knight_2")
+		@player2.pieces.delete("bishop_2")
+		@player2.pieces.delete("queen")
+		@board.update(@player2.pieces)
+		@board.show
+	end	
+
+	def castle_start_white_both
+		@board = Board.new
+		@player1 = Player.new("the weeknd", 'black')
+		@board.update(@player1.pieces)
+		@player2 = Player.new("demany", 'white')
+		@player2.pieces.delete("knight_1")
+		@player2.pieces.delete("bishop_1")
+		@player2.pieces.delete("knight_2")
+		@player2.pieces.delete("bishop_2")
+		@player2.pieces.delete("queen")
+		@board.update(@player2.pieces)
+		@board.show
+	end	
+
 	def get_chosen_arr(player,other_player)
 		while 1
 			puts "which piece do you want to move?"
@@ -114,8 +188,6 @@ class Game
 		pos
 	end
 
-
-
 	def all_moves(pieces_hash)
 		pieces = pieces_hash.values
 		moves_arr = []
@@ -126,16 +198,108 @@ class Game
 		moves_arr.flatten.uniq.sort
 	end
 
-	def get_destination(board_moves,choice,other_player)
+	def can_castle?(player,under_threat)
+		if player.color == 'black'
+			y = 0
+		elsif player.color == 'white'
+			y = 7
+		end
+
+		king = player.pieces['king']
+		unmoved_rooks = []
+		player.pieces.each do |piece_name,piece_object|   # make array of rooks that haven't moved yet
+			if piece_name =~ /rook/ && !piece_object.moved_yet
+				unmoved_rooks << piece_name
+			end
+		end
+		#print "king "; p king
+		#print "unmoved_rooks "; p unmoved_rooks
+		clear_rooks = []
+		if !king.moved_yet && !unmoved_rooks.empty? && !player.check # if king hasn't moved yet, at least one rook hasn't moved, and king is not in check
+			unmoved_rooks.each do |rook|
+				#print "rook "; p rook
+				clear_path = false
+				if rook[-1] == "1"
+					cols = [1,2]
+				elsif rook[-1] == "2"
+					cols = [4,5,6]
+				end
+				cols.each do |x|
+					#print "[x,y]"; p [x,y]
+					board_square = @board.arr_to_board([x,y])
+					if !@board.occupied([x,y]) && under_threat.none? { |threat| threat == board_square } # if square is unoccupied and not under threat
+						clear_path = true
+					else
+						clear_path = false
+					end
+				end
+				clear_rooks << rook if clear_path
+			end
+			#print "clear_rooks"; p clear_rooks
+			return clear_rooks
+		else
+			return false
+		end
+	end
+
+	def castle(player, rooks_arr)
+		if rooks_arr.length > 1 # there two rooks you can castle with
+			pos_1 = player.pieces[rooks_arr[0]].pos
+			pos_2 = player.pieces[rooks_arr[1]].pos
+			y = pos_1[1]
+			puts "you can castle with your rook at #{pos_1} or your rook at #{pos_2}"
+			puts "which one?"
+			while 1
+				choice = gets.chomp.downcase
+				if valid_pos_name?(choice)
+					if choice == pos_1 || choice == pos_2
+						break
+					else
+						puts "you don't have a rook there that you can castle with :( choose again"
+						sleep(0.7)
+					end
+				else
+					puts "that's not a valid position :( try again"
+					sleep(0.7)
+				end
+			end
+			if choice[0] == 'a'
+				rook = rooks_arr[0]
+			elsif choice[0] == 'h'
+				rook = rooks_arr[1]
+			end
+		else
+			rook = rooks_arr[0]
+		end
+		king_piece = player.pieces['king']
+		rook_piece = player.pieces[rook]
+		if rook[-1] == '1' # if rook on left
+			@board.move_piece(king_piece, "b#{y}")
+			@board.move_piece(rook_piece, "c#{y}")
+		elsif rook[-1] == '2'
+			@board.move_piece(king_piece, "f#{y}")
+			@board.move_piece(rook_piece, "e#{y}")
+		end
+	end
+
+	def get_destination(board_moves,choice,player,other_player)
+		
+		puts "where would you like to move your #{choice}?"
+		if choice == 'king'
+			under_threat = all_moves(other_player.pieces)
+			can_castle = can_castle?(player,under_threat)
+			if can_castle
+				puts "you can castle! if you'd like to castle, input \"castle\""
+			end
+		end
+
 		while 1
-			puts "where would you like to move your #{choice}?"
 			#print "board_moves "; p board_moves
 			destination = gets.chomp.downcase
 
 			if valid_pos_name?(destination) # if your input is formatted correctly
 				if board_moves.any? { |move| move == destination } # if your input is one of the piece's moves
 					if choice == 'king'
-						under_threat = all_moves(other_player.pieces)
 						if under_threat.any? { |square| square == destination }
 							puts "king can't move there because that square is under threat of attack!"
 						else
@@ -148,6 +312,9 @@ class Game
 					puts "your #{choice} can't move there :("
 					sleep(0.5)
 				end
+			elsif destination == 'castle' && can_castle
+				return can_castle
+				break
 			else
 				puts "that's not a valid position :( try again"
 				sleep(0.7)
@@ -189,9 +356,15 @@ class Game
 		board_moves = @board.valid_moves(piece) # array containing possible moves in board format "a1"
 		#print "arr_moves"; p arr_moves
 		#print "board_moves"; p board_moves
-		destination = get_destination(board_moves,choice,other_player)
-
-		taken_piece = @board.move_piece(piece,destination)
+		destination = get_destination(board_moves,choice,player,other_player)
+		if destination.is_a? Array
+			castle(player,destination)
+			taken_piece = nil
+			#print "destination "; p destination
+		else
+			taken_piece = @board.move_piece(piece,destination)
+		end
+		
 		#print "taken_piece "; p taken_piece
 		if taken_piece
 			taken_piece_name = other_player.pieces.key(taken_piece)
@@ -278,9 +451,9 @@ class Game
 	end
 
 	def play
-		test_start
-		test_setup
-		@board.show
+		castle_start_black_both
+		#test_setup
+		#@board.show
 		#p check?(@player2,@player1)
 		#print "checkmate? "; p checkmate?(@player2,@player1)
 		#p @player1.pieces

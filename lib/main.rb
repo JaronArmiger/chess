@@ -20,4 +20,8 @@ player2 = Player.new("demany", "white")
 #p board.all_moves(player1.pieces).sort
 
 game = Game.new
+#game.castle_start_white_both
 game.play
+#under_threat = game.all_moves(player1.pieces)
+#player1.pieces['rook_2'].moved_yet = true
+#p game.can_castle?(player2,under_threat)
