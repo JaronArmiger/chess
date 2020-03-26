@@ -1,3 +1,4 @@
+
 class Board
 	attr_accessor :field
 	def initialize
@@ -307,6 +308,12 @@ class Board
 			pretty_arr << arr_to_board(pair)
 		end
 		pretty_arr
+	end
+
+	def to_json(*a)
+		{
+			:field => @field
+		}.to_json(*a)
 	end
 
 	

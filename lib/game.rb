@@ -1,5 +1,8 @@
+
+
 class Game
-	def start
+	def new_game
+		@saved_yet = false
 		@board = Board.new
 		puts "let's play some chess BABY"
 		sleep(0.7)
@@ -19,6 +22,7 @@ class Game
 		
 		puts "here's the board!"
 		sleep(1)
+		@turn_num = 1
 		@board.show
 	end
 
@@ -107,7 +111,7 @@ class Game
 
 	def get_chosen_arr(player,other_player)
 		while 1
-			puts "which piece do you want to move?"
+			puts "which piece do you want to move? input 'save' to save and quit game"
 			choice = gets.chomp.downcase
 			if valid_piece_name?(choice)
 				if choice == 'king'
@@ -150,6 +154,10 @@ class Game
 						sleep(0.7)
 					end
 				end
+			elsif choice == 'save'
+				save
+				return 'save'
+				break
 			else
 				puts "enter a valid piece name. you know what they are -__-"
 				sleep(0.7)
@@ -340,18 +348,22 @@ class Game
 			puts "you have no choice but to move your king!"
 		else
 			chosen_arr = get_chosen_arr(player,other_player) # this function is where player inputs piece that they want to move
-			chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
-			#print "chosen_hash"; p chosen_hash
-			choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
-			#print "chosen_hash"; p chosen_hash
-			if chosen_hash.length > 1
-				pos = choose_piece(chosen_hash,choice,player.pieces)
+			if chosen_arr == 'save'
+				return true
 			else
-				pos = chosen_hash.keys[0]
+				chosen_hash = chosen_arr[0] # this is hash of the locations of the piece's that match the player's choice (ex all their pawns) and the names of those pieces as stored in player.pieces array
+				#print "chosen_hash"; p chosen_hash
+				choice = chosen_arr[1] # this is the name of the piece type (ex pawn)
+				#print "chosen_hash"; p chosen_hash
+				if chosen_hash.length > 1
+					pos = choose_piece(chosen_hash,choice,player.pieces)
+				else
+					pos = chosen_hash.keys[0]
+				end
+				#print "pos"; p pos
+				piece_name = chosen_hash[pos]
+				piece = player.pieces[piece_name]
 			end
-			#print "pos"; p pos
-			piece_name = chosen_hash[pos]
-			piece = player.pieces[piece_name]
 		end
 		board_moves = @board.valid_moves(piece) # array containing possible moves in board format "a1"
 		#print "arr_moves"; p arr_moves
@@ -364,7 +376,6 @@ class Game
 		else
 			taken_piece = @board.move_piece(piece,destination)
 		end
-		
 		#print "taken_piece "; p taken_piece
 		if taken_piece
 			taken_piece_name = other_player.pieces.key(taken_piece)
@@ -379,7 +390,7 @@ class Game
 			puts "#{other_player.name}, CHECK!"
 			sleep(0.7)
 		end
-		
+		false
 	end
 
 	def check?(player,other_player)
@@ -450,48 +461,131 @@ class Game
 		#@board.move_piece(b_bishop, "b5")
 	end
 
-	def play
-		castle_start_black_both
-		#test_setup
-		#@board.show
-		#p check?(@player2,@player1)
-		#print "checkmate? "; p checkmate?(@player2,@player1)
-		#p @player1.pieces
-		while 1
-			if checkmate?(@player1,@player2) # player 1 is in checkmate
-				winner = @player2
-				break
-			end
-			turn(@player1,@player2)
-			if checkmate?(@player2,@player1) # player 2 is in checkmate
-				
-				winner = @player1
-				break
-			end
-			turn(@player2,@player1)
-		end
-		puts "and CHECKMATE!!"
-		sleep(1)
-		puts "#{winner.name} is VICTORIOUS!!!"
-
-		
-=begin
-		puts "player"
-		p @player1
-		puts "\n\n\n\n"
-		#p @player2
-		puts "board.field"
-		p @board.field
-		puts "\n\n\n\n"
-		@player1.pieces.delete("b_rook_1")
-		puts "rook deleted"
-		puts "player"
-		p @player1
-		puts "\n\n\n\n"
-
-		puts "board.field"
-		p @board.field
-=end
-		#turn(@player1)
+	def to_json(*a)
+		{  		:player1 => @player1,
+				:player2 => @player2,
+				:turn_num => @turn_num,
+				:saved_yet => @saved_yet,
+				:game_name => @game_name
+		 }.to_json(*a)
 	end
+
+	def save
+		if !@saved_yet
+			puts "name your saved game"
+			@game_name = gets.chomp.downcase
+		end
+		json_string = self.to_json
+		Dir.mkdir('saved_games') unless Dir.exists? 'saved_games'
+		filename = "saved_games/#{@game_name}.json"
+		File.open(filename, 'w') do |file|
+			file.puts json_string
+		end
+	end
+
+	def load_game?
+		while 1
+			puts "load game or new game?"
+			choice = gets.chomp.downcase
+			if choice == 'load game'
+				return true
+				break
+			elsif choice == 'new game'
+				return false
+				break
+			end
+		end
+	end
+
+	def load_game
+		if !Dir.glob('saved_games/*').empty? # if saved_games directory contains saved games
+			puts "saved games: "
+			shortened_names = []
+			Dir.glob('saved_games/*').each do |pathname|
+				shortened = pathname.gsub('saved_games/', '').gsub('.json','')
+				shortened_names << shortened
+				puts "\t#{shortened}"
+			end
+
+			sleep(0.5)
+			loaded = false
+			while 1
+				
+				puts "which game do you want to load?"
+				choice = gets.chomp.downcase
+				shortened_names.each do |shortened|
+					if choice == shortened
+						puts "ye"
+						game_name = "saved_games/#{shortened}.json"
+						#puts game_name
+						contents = File.read(game_name)
+						data = JSON.load contents
+						#p1_pieces = data['player1']['pieces']
+						#print "p1 pieces hash "; p p1_pieces
+						#print "p1 name"; p player1_data = data['player1']['name']
+						player1_data = data['player1']
+						player2_data = data['player2']
+						@player1 = Player.from_json(player1_data)
+						@player2 = Player.from_json(player2_data)
+						#print "player 1 "; p @player1
+						#print "player 2 "; p @player2
+						@game_name = data['game_name']
+						@turn_num = data['turn_num']
+						@board = Board.new
+						@board.update(@player1.pieces)
+						@board.update(@player2.pieces)
+						@board.show
+						@saved_yet = true
+						loaded = true					
+					end
+				end
+				break if loaded
+				puts "you don't have a saved game called #{choice} :( try again :)"
+			end
+		else
+			puts "no saved games :( starting new game"
+			@saved_yet = false
+			new_game
+		end
+	end
+
+	def play
+		if load_game?
+			load_game
+		else
+			new_game
+		end
+		#print "board: "; p @board
+		#print "player1: "; p @player1
+		#print "player2: "; p @player2
+
+		#castle_start_black_both
+		
+		while 1
+			if @turn_num.odd?
+				player = @player1
+				other_player = @player2
+			else
+				player = @player2
+				other_player = @player1
+			end
+
+			if checkmate?(player,other_player) # player 1 is in checkmate
+				winner = other_player
+				break
+			end
+			saved = turn(player,other_player)
+			break if saved
+			@turn_num += 1
+		end
+		if !saved
+			puts "and CHECKMATE!!"
+			sleep(1)
+			puts "#{winner.name} is VICTORIOUS!!!"
+		end
+	end
+
+
+
+
 end

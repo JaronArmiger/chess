@@ -13,4 +13,23 @@ class King
 		@limit = 1
 		@moved_yet = false
 	end
+
+	def to_json(*a)
+		{
+			:pos => @pos, 
+			:color => @color, 
+			:sym => @sym, 
+			:direction => @direction, 
+			:limit => @limit, 
+			:moved_yet => @moved_yet
+		}.to_json(*a)
+	end
+
+	def self.from_json(data)
+		pos = data['pos']
+		color = data['color']
+		piece = self.new(pos,color)
+		piece.moved_yet = data['moved_yet']
+		piece
+	end
 end

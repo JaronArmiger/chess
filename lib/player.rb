@@ -45,4 +45,42 @@ class Player
 			print "#{name} => pos: #{piece.pos}\n"
 		end
 	end
+
+	def self.from_json(data)
+		p_name = data['name']
+		color = data['color']
+		player = self.new(p_name,color)
+		obj_pieces_hash = {}
+		json_pieces_hash = data['pieces']
+		json_pieces_hash.each do |piece_name, piece_info|
+			if piece_name =~ /pawn/
+				piece = Pawn.from_json(piece_info)
+			elsif piece_name =~ /rook/
+				piece = Rook.from_json(piece_info)
+			elsif piece_name =~ /knight/
+				piece = Knight.from_json(piece_info)
+			elsif piece_name =~ /bishop/
+				piece = Bishop.from_json(piece_info)
+			elsif piece_name =~ /queen/
+				piece = Queen.from_json(piece_info)
+			elsif piece_name =~ /king/
+				piece = King.from_json(piece_info)
+			end
+			obj_pieces_hash[piece_name] = piece
+		end
+		player.pieces = obj_pieces_hash
+		player.check = data['check']
+		player
+		#pieces_data = data['pieces']
+	end
+
+	def to_json(*a)
+		{
+			:name => @name,
+			:color => @color,
+			:pieces => @pieces,
+			:check => @check
+		}.to_json(*a)
+	end
+
 end
